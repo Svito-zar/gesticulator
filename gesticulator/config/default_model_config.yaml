@@ -1,0 +1,49 @@
+# For detailed information regarding these parameters, see 'model_config.py'
+# The values here are the same as the defaults in the code
+
+# ---- Data directories ----
+data_dir:   '../dataset/processed'
+result_dir: '../results'
+run_name:   'last_run'
+# generated_prediction_dir: # defaults to <result_dir>/<run_name>/generated_gestures/
+# saved_models_dir:         # defaults to <result_dir>/<run_name>/models
+
+# ---- Data processing parameters ----
+sequence_length: 40 # The length of each training sequence 
+past_context: 10 # The number of past speech frames to use as context during prediction
+future_context: 20 # The number of future speech frames to use as context during prediction
+text_context: 10 # The number of future text frames to use for generating gestures
+
+# ---- Network architecture ----
+text_embedding: 'BERT' # Or 'FastText'
+activation: 'TanH'
+n_layers: 1
+first_l_sz: 256
+second_l_sz: 512
+third_l_sz: 384
+n_prev_poses: 3 # For autoregression
+speech_enc_frame_dim: 124
+full_speech_enc_dim: 612
+
+# ---- Training parameters ----
+batch_size: 64
+learning_rate: 0.0001
+# The training loss is MSE(motion_pred, motion_orig) + vel_coef * MSE(velocity_pred, velocity_orig)
+vel_coef: 0.6 
+dropout: 0.2
+dropout_multiplier: 4.0 # The dropout is multiplied by this factor in the conditioning layer
+n_epochs_with_teacher_forcing: 7
+# ---- Parameters for saving model predictions ----
+save_val_predictions_every_n_epoch: 0 # Disabled by default
+save_train_predictions_every_n_epoch: 0 # Disabled by default
+saved_prediction_duration_sec: 9
+prediction_save_formats: ["video", "raw_gesture"] # Can be "bvh_file" and "3d_coordinates" too
+
+# ---- Binary flags ---- 
+generate_semantic_test_predictions: False
+generate_random_test_predictions: False
+use_pca: False
+use_recurrent_speech_enc: False
+no_overwrite_warning: False
+# If 'no_overwrite_warning' is set, and the given <run_name> directory
+# already exists, it will be cleared without displaying any warnings
