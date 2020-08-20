@@ -1,5 +1,5 @@
 # Gesticulator: A framework for semantically-aware speech-driven gesture generation
-This repository contains PyTorch based implementation of the framework for semantically-aware speech-driven gesture generation, which can be used to reproduce the experiments in the ICMI paper [Gesticulator](svito-zar.github.io/gesticulator/).
+This repository contains PyTorch based implementation of the framework for semantically-aware speech-driven gesture generation, which can be used to reproduce the experiments in the ICMI paper [Gesticulator](https://svito-zar.github.io/gesticulator/).
 
 
 ## 0. Set up
@@ -108,7 +108,7 @@ If you use this code in your research please cite it:
 }
 ```
 
-For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using their [IVA'18 paper](https://www.scss.tcd.ie/Rachel.McDonnell/papers/IVA2018b.pdf):
+For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using their [IVA'18 paper](https://www.scss.tcd.ie/Rachel.McDonnell/papers/IVA2018b.pdf).
 
 ## Contact
 If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
