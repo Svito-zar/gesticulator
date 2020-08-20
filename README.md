@@ -1,5 +1,5 @@
 # Gesticulator: A framework for semantically-aware speech-driven gesture generation
-This repository contains PyTorch based implementation of the framework for semantically-aware speech-driven gesture generation, which can be used to reproduce the experiments in the paper [Gesticulator](https://arxiv.org/abs/2001.09326).
+This repository contains PyTorch based implementation of the framework for semantically-aware speech-driven gesture generation, which can be used to reproduce the experiments in the ICMI paper [Gesticulator](svito-zar.github.io/gesticulator/).
 
 
 ## 0. Set up
@@ -9,7 +9,7 @@ This repository contains PyTorch based implementation of the framework for seman
 - ffmpeg (for visualization)
 
 ### Installation
-NOTE: during installation, there will be two error messages (one for bert-embedding and one for mxnet) about conflicting packages - those can be ignored.
+NOTE: during installation, there will be several error messages (one for bert-embedding and one for mxnet) about conflicting packages - those can be ignored.
 
 ```
 git clone git@github.com:Svito-zar/gesticulator.git
@@ -41,7 +41,6 @@ Head over to the `demo` folder for a quick demonstration if you're not intereste
 - Either obtain transcriptions by yourself:
   - Transcribe the audio using Automatic Speech Recognition (ASR), such as [Google ASR](https://cloud.google.com/speech-to-text/)
   - Manually correct the transcriptions and add punctuations
-- Or obtain already transcribed dataset as a participant of the [GENEA Gesture Generation Challenge](https://genea-workshop.github.io/2020/#gesture-generation-challenge)
 - Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `speech`, `motion` and `transcript`.
 
 ## 2. Pre-process the data
@@ -99,9 +98,17 @@ For the quantitative evaluation (velocity histograms and jerk), you may use the 
 
 ## Citing
 
-For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using their [IVA'18 paper](https://www.scss.tcd.ie/Rachel.McDonnell/papers/IVA2018b.pdf).
+If you use this code in your research please cite it:
+```
+@inproceedings{kucherenko2020gesticulator,
+  title={Gesticulator: A framework for semantically-aware speech-driven gesture generation},
+  author={Kucherenko, Taras and Jonell, Patrik and van Waveren, Sanne and Henter, Gustav Eje and Alexanderson, Simon and Leite, Iolanda and Kjellstr{\"o}m, Hedvig},
+  booktitle={Proceedings of the ACM International Conference on Multimodal Interaction},
+  year={2020}
+}
+```
 
-For using the code base itself please cite the [Gesticulator](https://arxiv.org/abs/2001.09326) paper.
+For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using their [IVA'18 paper](https://www.scss.tcd.ie/Rachel.McDonnell/papers/IVA2018b.pdf):
 
 ## Contact
 If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
