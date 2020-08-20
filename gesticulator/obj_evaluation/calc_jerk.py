@@ -39,7 +39,12 @@ def compute_jerks(data, dim=3):
             x2 = j * dim + dim
             jerk_norms[i, j] = np.linalg.norm(jerks[i, x1:x2])
 
-    return np.mean(jerk_norms, axis=0)
+    average = np.mean(jerk_norms, axis=0)
+
+    # Take into account that frame rate was 20 fps
+    scaled_av = average * 20 * 20 * 20
+
+    return scaled_av
 
 
 def compute_acceleration(data, dim=3):
@@ -67,7 +72,12 @@ def compute_acceleration(data, dim=3):
             x2 = j * dim + dim
             acc_norms[i, j] = np.linalg.norm(accs[i, x1:x2])
 
-    return np.mean(acc_norms, axis=0)
+    average = np.mean(acc_norms, axis=0)
+
+    # Take into account that frame rate was 20 fps
+    scaled_av = average * 20 * 20
+
+    return scaled_av
 
 
 def save_result(lines, out_dir, measure):
@@ -95,34 +105,6 @@ def save_result(lines, out_dir, measure):
     print('')
 
 
-def check(predicted_dir, original_dir):
-
-    # Check if data was setup correctly
-
-    if not os.path.exists(predicted_dir):
-        print("\nERROR! The path to the predicted files is not valid: ", predicted_dir)
-        print(
-            "You need to set the path to the data with predicted gestures: 'cal_distance.py -p <predictions_subfolder_name>' ")
-        exit(-1)
-
-    if len(os.listdir(predicted_dir)) == 0:
-        print("\nERROR! There are no files in the predictions directory ", predicted_dir)
-        print(
-            "You need to set the correct path to the data with predicted gestures: 'cal_distance.py -p <predictions_subfolder_name>' ")
-        exit(-1)
-
-    if not os.path.exists(original_dir):
-        print("\nERROR! The path to the original files is not valid: ", original_dir)
-        print(
-            "You need to set the path to the data with original gestures: 'cal_distance.py -o <originals_subfolder_name>' ")
-        exit(-1)
-
-    if len(os.listdir(original_dir)) == 0:
-        print("\nERROR! There are no files in the original directory ", original_dir)
-        print(
-            "You need to set the correct path to the data with original gestures: 'cal_distance.py -o <originals_subfolder_name>'  ")
-        exit(-1)
-
 def main():
     measures = {
         'jerk': compute_jerks,
@@ -131,9 +113,9 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Calculate prediction errors')
-    parser.add_argument('--original', '-o', default='original',
+    parser.add_argument('--original', '-o', default='GT',
                         help='Original gesture directory')
-    parser.add_argument('--predicted', '-p', default='predicted',
+    parser.add_argument('--predicted', '-p', default='NoPCA',
                         help='Predicted gesture directory')
     parser.add_argument('--measure', '-m', default='acceleration',
                         help='Measure to calculate (jerk or acceleration)')
@@ -141,8 +123,8 @@ def main():
                         help='Directory to output the result')
     args = parser.parse_args()
 
-    predicted_dir =  os.path.join("data", args.predicted)
-    original_dir = os.path.join("data", args.original)
+    predicted_dir =  "data/" + args.predicted + "/" # os.path.join(args.predicted, args.gesture)
+    original_dir= "data/" + args.original  + "/"
 
     original_files = sorted(glob.glob(os.path.join(original_dir, '*.npy')))
     predicted_files = sorted(glob.glob(os.path.join(predicted_dir, '*.npy')))
@@ -161,8 +143,6 @@ def main():
 
     original_out_lines = [','.join(['file']) + '\n']
     predicted_out_lines = [','.join(['file']) + '\n']
-
-    check(predicted_dir, original_dir)
 
     original_values = []
     predicted_values = []

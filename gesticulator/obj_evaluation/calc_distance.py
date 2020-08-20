@@ -96,34 +96,6 @@ def save_result(lines, out_dir, width, measure):
     print('')
 
 
-def check(predicted_dir, original_dir):
-    # Check if data was setup correctly
-
-    if not os.path.exists(predicted_dir):
-        print("\nERROR! The path to the predicted files is not valid: ", predicted_dir)
-        print(
-            "You need to set the path to the data with predicted gestures: 'cal_distance.py -p <predictions_subfolder_name>' ")
-        exit(-1)
-
-    if len(os.listdir(predicted_dir)) == 0:
-        print("\nERROR! There are no files in the predictions directory ", predicted_dir)
-        print(
-            "You need to set the correct path to the data with predicted gestures: 'cal_distance.py -p <predictions_subfolder_name>' ")
-        exit(-1)
-
-    if not os.path.exists(original_dir):
-        print("\nERROR! The path to the original files is not valid: ", original_dir)
-        print(
-            "You need to set the path to the data with original gestures: 'cal_distance.py -o <originals_subfolder_name>' ")
-        exit(-1)
-
-    if len(os.listdir(original_dir)) == 0:
-        print("\nERROR! There are no files in the original directory ", original_dir)
-        print(
-            "You need to set the correct path to the data with original gestures: 'cal_distance.py -o <originals_subfolder_name>'  ")
-        exit(-1)
-
-
 def main():
     measures = {
         'velocity': compute_velocity,
@@ -132,27 +104,26 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Calculate histograms of moving distances')
-    parser.add_argument('--original', '-o', default='original',
+    parser.add_argument('--original', '-o', default='GT',
                         help='Original gesture directory')
-    parser.add_argument('--predicted', '-p', default='predicted',
+    parser.add_argument('--predicted', '-p', default='NoPCA',
                         help='Predicted gesture directory')
+    parser.add_argument('--gesture', '-g', #required=True,
+                        help='Directory storing predicted txt files')
     parser.add_argument('--width', '-w', type=float, default=0.05,
                         help='Bin width of the histogram')
-    parser.add_argument('--measure', '-m', default='acceleration',
+    parser.add_argument('--measure', '-m', default='velocity',
                         help='Measure to calculate (velocity or acceleration)')
     parser.add_argument('--select', '-s', nargs='+',
                         help='Joint subset to compute (if omitted, use all)')
-    parser.add_argument('--visualize', '-v', default=True,
+    parser.add_argument('--visualize', '-v', action='store_true',
                         help='Visualize histograms')
     parser.add_argument('--out', default='result',
                         help='Directory to output the result')
     args = parser.parse_args()
 
-    predicted_dir = "data/" + args.predicted + "/"
+    predicted_dir = "data/" + args.predicted + "/"  # os.path.join(args.predicted, args.gesture)
     original_dir = "data/" + args.original + "/"
-
-    # Check if data was setup correctly
-    check(predicted_dir, original_dir)
 
     original_files = sorted(glob.glob(os.path.join(original_dir, '*.npy')))
 
@@ -168,7 +139,6 @@ def main():
     if args.measure not in measures:
         raise ValueError('Unknown measure: \'{}\'. Choose from {}'
                          ''.format(args.measure, list(measures.keys())))
-
 
     original_out_lines = [','.join([''] + ['Total']) + '\n']
     predicted_out_lines = [','.join([''] + ['Total']) + '\n']
@@ -225,7 +195,6 @@ def main():
             predicted_line += ',' + str(predicted_hists[i, j])
         original_line += '\n'
         predicted_line += '\n'
-
         original_out_lines.append(original_line)
         predicted_out_lines.append(predicted_line)
 
