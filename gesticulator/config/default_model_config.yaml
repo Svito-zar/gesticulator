@@ -15,7 +15,7 @@ future_context: 20 # The number of future speech frames to use as context during
 text_context: 10 # The number of future text frames to use for generating gestures
 
 # ---- Network architecture ----
-text_embedding: 'BERT' # Or 'FastText'
+text_embedding: 'BERT'
 activation: 'TanH'
 n_layers: 1
 first_l_sz: 256

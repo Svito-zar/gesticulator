@@ -1,10 +1,9 @@
 """
-This file contains the functions that encode the words in the JSON transcriptions using BERT or FastText.
+This file contains the functions that encode the words in the JSON transcriptions using BERT.
 
 The main differences between the two embeddings are:
     - the dimensionalities (768 vs 300)
-    - BERT encodes the words using the entire sentence as a context, 
-      while FastText encodes the words individually
+    - BERT encodes the words using the entire sentence as a context
 
 We expect that the JSONs were create with 10 FPS. 
 
@@ -154,77 +153,6 @@ def encode_json_transcript_with_bert(json_file, bert_model):
 
     return np.array(feature_array)
 
-def encode_json_transcript_with_fasttext(json_file, fasttext_model):
-    """Create a feature array by encoding the given JSON file with the given FastText model
-    and adding the 5 extra features for each frame.
-
-    Args:
-        json_file:       the path to the JSON transcription
-        fasttext_model:  the FastText model to encode the words with
-    
-    Returns:
-        feature_array:   an array of shape (n_frames, 305), where n_frames is the number of timeframes.
-    
-    NOTE: The transcription is processed at 10 FPS, so for a 60 second input 
-          there will be 600 frames. 
-
-    NOTE: The feature dimensionality is 305 because we add 5 extra features
-          on top of the FastText dimensionality (300).
-    """
-    fillers = ["eh", "ah", "like", "kind of"]
-    delimiters = ['.', '!', '?']
-    
-    silence_encoding = np.array([-15 for i in range(300)]) # Fasttext has 300-dimensional features
-    silence_extra_features = [0, 0, 0, 0, 0] # The extra text features for silence are all zeros
-   
-    filler_encoding  = fasttext_model["ah"] # The fillers will be encoded with the same vector
-
-    elapsed_deciseconds = 0   
-    feature_array = []
-    
-    # The JSON files contain about a minute long segments
-    with open(json_file, 'r') as file:
-        transcription_segments = json.load(file)
-    
-    for segment in transcription_segments: 
-        segment_words = segment['alternatives'][0]['words']    
-
-        for word_data in segment_words:   
-            word = word_data['word']
-
-            # The delimiters are not relevant to FastText
-            for d in delimiters: 
-                word.replace(d, '') 
-
-            # Word attributes: duration, speed, start time, end time 
-            word_attributes = extract_word_attributes(word_data)
-
-            # NOTE: Each frame below is one decisecond long
-            
-            # Process the silent frames before the word starts
-            while elapsed_deciseconds < word_attributes['start_time']:
-                elapsed_deciseconds += 1
-                # The silent frames always have the same features and encoding
-                feature_array.append(list(silence_encoding) + silence_extra_features)
-            
-            word_encoding = filler_encoding if word in fillers else fasttext_model[word]
-
-            # Process the voiced frames             
-            while elapsed_deciseconds < word_attributes['end_time']:
-                elapsed_deciseconds += 1
-
-                frame_extra_features = extract_extra_features(
-                                            word_attributes, elapsed_deciseconds)
-
-                feature_array.append(list(word_encoding) + frame_extra_features)
-
-    if len(feature_array) != elapsed_deciseconds:
-        print(f"ERROR: The number of frames in the encoded transcript ({len(feature_array)})") 
-        print(f"       does not match the number of frames in the input ({elapsed_deciseconds})!")
-        
-        exit(-1)
-
-    return np.array(feature_array)
 
 def check_json_transcript(json_file, printout=False):
     """

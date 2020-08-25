@@ -145,8 +145,6 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
 
         if args.text_embedding == "BERT":
             self.text_dim = 773
-        elif args.text_embedding == "FastText":
-            self.text_dim = 305
         else:
             raise "Unknown word embedding"
 

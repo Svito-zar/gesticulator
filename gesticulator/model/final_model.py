@@ -1,7 +1,5 @@
 """
-This file contains our model,
-which is based on the Mixture Density Network (https://github.com/Svito-zar/pytorch-mdn)
-and Gated Recurrent Units
+This file contains our final model
 
 author: Taras Kucherenko
 contact: tarask@kth.se
@@ -81,8 +79,6 @@ class My_Model(pl.LightningModule):
 
         if args.text_embedding == "BERT":
             self.text_dim =   773
-        elif args.text_embedding == "FastText":
-            self.text_dim = 305
         else:
             raise "Unknown word embedding"
 
@@ -572,7 +568,7 @@ class My_Model(pl.LightningModule):
                             help='Coefficient for the variance loss')
 
         # Folders params
-        parser.add_argument('--text_embedding', '-text_emb', default="BERT",  # or "FastText"
+        parser.add_argument('--text_embedding', '-text_emb', default="BERT",
                             help='Which text embedding do we use')
         parser.add_argument('--data_dir', '-data',
                             default="/home/tarask/Documents/storage/SpeechToMotion/Irish/WithTextV5",

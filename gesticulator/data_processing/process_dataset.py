@@ -12,13 +12,13 @@ import tqdm
 import pandas as pd
 import numpy as np
 
-from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert, encode_json_transcript_with_fasttext
+from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert
 from gesticulator.data_processing import tools
 # Params
 from gesticulator.data_processing.data_params import processing_argparser
 
 from bert_embedding import BertEmbedding
-from torchnlp.word_to_vector import FastText
+
 
 def _encode_vectors(audio_filename, gesture_filename, text_filename, embedding_model, mode, args, augment_with_context):
     """
@@ -98,8 +98,8 @@ def _encode_vectors(audio_filename, gesture_filename, text_filename, embedding_m
     # Step 3: Obtain text transcription:
     if isinstance(embedding_model, BertEmbedding):
         text_encoding = encode_json_transcript_with_bert(text_filename, embedding_model)
-    elif isinstance(embedding_model, FastText):
-        text_encoding = encode_json_transcript_with_fasttext(text_filename, embedding_model)
+    else:
+        raise Exception('Something is wrong with the BERT embedding model')
 
     if debug:
         print(input_vectors.shape)

@@ -50,13 +50,9 @@ def check_feature_type(model_file):
     audio_plus_text_dim = params['state_dict']['encode_speech.0.weight'].shape[1]
 
     # This is a bit hacky, but we can rely on the fact that 
-    # BERT has 768-dimensional vectors while FastText has 
-    # 300-dimensional vectors. 
+    # BERT has 768-dimensional vectors
     # We add 5 extra features on top of that in both cases.
-    if audio_plus_text_dim > 700:
-        text_dim = 768 + 5 # BERT
-    else:
-        text_dim = 300 + 5 # FastText
+    text_dim = 768 + 5
 
     audio_dim = audio_plus_text_dim - text_dim
 

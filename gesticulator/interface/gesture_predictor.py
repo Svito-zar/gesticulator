@@ -8,9 +8,8 @@ import numpy as np
 import torch
 
 from bert_embedding import BertEmbedding
-from torchnlp.word_to_vector.fast_text import FastText
 
-from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert, encode_json_transcript_with_fasttext
+from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert
 from gesticulator.data_processing import tools
 from gesticulator.model.model import GesticulatorModel
 from motion_visualizer.convert2bvh import write_bvh
@@ -206,11 +205,8 @@ class GesturePredictor:
         if text_type == self.TextInputType.JSON_PATH:
             if isinstance(self.embedding, BertEmbedding):
                 return encode_json_transcript_with_bert(text, self.embedding)
-            elif isinstance(self.embedding, FastText):
-                return encode_json_transcript_with_fasttext(text, self.embedding)
             else:
-                print('ERROR: Unknown embedding: ', self.embedding)
-                exit(-1)
+                raise Exception('ERROR: Unknown embedding: ', self.embedding)
         
         if text_type == self.TextInputType.TEXT_PATH:
             # Load the file
@@ -220,8 +216,6 @@ class GesturePredictor:
         # At this point 'text' contains the input transcription as a string
         if isinstance(self.embedding, BertEmbedding):
             return self._estimate_word_timings_bert(text, audio_len_frames)
-        elif isinstance(self.embedding, FastText):
-            return self._estimate_word_timings_fasttext(text, audio_len_frames)
         else:
             print('ERROR: Unknown embedding: ', self.embedding)
             exit(-1)
@@ -359,98 +353,6 @@ class GesturePredictor:
     
         return np.array(output_features)
 
-    def _estimate_word_timings_fasttext(self, text, total_duration_frames):
-        """
-        This is a convenience functions that enables the model to work with plaintext 
-        transcriptions in place of a time-annotated JSON file from Google Speech-to-Text.
-
-        It does the following two things:
-        
-            1) Encodes the given text into word vectors using FastText embedding
-            
-            2) Assuming 10 FPS and the given length, estimates the following features for each frame:
-                - elapsed time since the beginning of the current word 
-                - remaining time from the current word
-                - the duration of the current word
-                - the progress as the ratio 'elapsed_time / duration'
-                - the pronunciation speed of the current word (number of syllables per decisecond)
-               so that the word length is proportional to the number of syllables in it.
-        
-        Args: 
-            text:  the plaintext transcription
-            total_duration_frames:  the total duration of the speech (in frames)
-
-        Returns:
-            feature_array:  a numpy array of shape (305, n_frames) that contains the text features
-        """
-        print("Estimating word timings with FastText using syllable count.")
-        print(f'\nInput text:\n"{text}"')
-
-        # The fillers will be encoded with the same vector
-        filler_encoding  = self.embedding["ah"] 
-        fillers = ["eh", "ah", "like", "kind of"]
-        delimiters = ['.', '!', '?']
-        n_syllables = []
-        
-        # The transcription might contain numbers - we will use the 'inflect' library
-        # to convert those to words e.g. 456 to "four hundred fifty-six"
-        num_converter = inflect.engine()
-
-        words = []
-        for word in text.split():
-            # Remove the delimiters
-            for d in delimiters:
-                word.replace(d, '') 
-
-            # If the current word is not a number, we just append it to the list of words (and calculate the syllable count too)
-            if not word.isnumeric() and not word[:-1].isnumeric():
-                # NOTE: we check word[:-1] because we want to interpret a string like "456," as a number too
-                words.append(word)
-                n_syllables.append(count_syllables(word))
-            else:
-                number_in_words = num_converter.number_to_words(word, andword="")
-                # Append each word in the number (e.g. "four hundred fifty-six") to the list of words
-                for number_word in number_in_words.split():
-                    words.append(number_word)
-                    n_syllables.append(count_syllables(number_word))
-        
-        total_n_syllables = sum(n_syllables)
-        elapsed_deciseconds = 0       
-        # Shape of (batch_size, frame_length, 305)
-        feature_array = []
-
-        for curr_word, word_n_syllables in zip(words, n_syllables):
-            # The estimated word durations are proportional to the number of syllables in the word
-            if word_n_syllables == 0:
-                raise Exception(f"Error, word '{curr_word}' has 0 syllables!")
-
-            word_encoding = self.embedding[curr_word]
-            # We take the ceiling to not lose information
-            # (if the text was shorter than the audio because of rounding errors, then
-            #  the audio would be cropped to the text's length)
-            w_duration = ceil(total_duration_frames * word_n_syllables / total_n_syllables)
-            w_speed = word_n_syllables / w_duration if w_duration > 0 else 10 # Because 10 FPS
-            w_start = elapsed_deciseconds
-            w_end   = w_start + w_duration
-            
-            # print("Word: {} | Duration: {} | #Syl: {} | time: {}-{}".format(curr_word, w_duration, word_n_syllables, w_start, w_end))            
-            
-            while elapsed_deciseconds < w_end:
-                elapsed_deciseconds += 1
-                
-                w_elapsed_time = elapsed_deciseconds - w_start
-                w_remaining_time = w_duration - w_elapsed_time + 1
-                w_progress = w_elapsed_time / w_duration
-                
-                frame_features = [ w_elapsed_time,
-                                   w_remaining_time,
-                                   w_duration,
-                                   w_progress,
-                                   w_speed ]
-
-                feature_array.append(list(word_encoding) + frame_features)
-
-        return np.array(feature_array)
 
     def _align_vector_lengths(self, audio_features, text_features):
         # NOTE: at this point audio is 20fps and text is 10fps
