@@ -26,8 +26,11 @@ def compute_velocity(data, dim=3):
           vel_norms:    velocities of each joint between each adjacent frame
     """
 
+    # Flatten the array of 3d coords
+    coords = data.reshape(data.shape[0], -1)
+
     # First derivative of position is velocity
-    vels = np.diff(data, n=1, axis=0)
+    vels = np.diff(coords, n=1, axis=0)
 
     num_vels = vels.shape[0]
     num_joints = vels.shape[1] // dim
@@ -40,7 +43,7 @@ def compute_velocity(data, dim=3):
             x2 = j * dim + dim
             vel_norms[i, j] = np.linalg.norm(vels[i, x1:x2])
 
-    return vel_norms
+    return vel_norms * 20
 
 
 def compute_acceleration(data, dim=3):
@@ -68,7 +71,7 @@ def compute_acceleration(data, dim=3):
             x2 = j * dim + dim
             acc_norms[i, j] = np.linalg.norm(accs[i, x1:x2])
 
-    return acc_norms
+    return acc_norms * 20 * 20
 
 
 def save_result(lines, out_dir, width, measure):
@@ -110,7 +113,7 @@ def main():
                         help='Predicted gesture directory')
     parser.add_argument('--gesture', '-g', #required=True,
                         help='Directory storing predicted txt files')
-    parser.add_argument('--width', '-w', type=float, default=0.05,
+    parser.add_argument('--width', '-w', type=float, default=1,
                         help='Bin width of the histogram')
     parser.add_argument('--measure', '-m', default='velocity',
                         help='Measure to calculate (velocity or acceleration)')
@@ -167,7 +170,7 @@ def main():
     predicted_distances = np.concatenate(predicted_distances)
 
     # Compute histogram for each joint
-    bins = np.arange(0, 1+args.width, args.width)
+    bins = np.arange(0, 19+args.width, args.width)
     num_joints = original_distances.shape[1]
     original_hists = []
     predicted_hists = []
