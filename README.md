@@ -9,41 +9,48 @@ This repository contains PyTorch based implementation of the framework for seman
 - ffmpeg (for visualization)
 
 ### Installation
-NOTE: during installation, there will be several error messages (one for bert-embedding and one for mxnet) about conflicting packages - those can be ignored.
+**NOTE**: during installation, there will be several error messages (one for bert-embedding and one for mxnet) about conflicting packages - please ignore them, they don't affect the functionality of the repository.
 
-```
-git clone git@github.com:Svito-zar/gesticulator.git
-cd gesticulator
-pip install -r gesticulator/requirements.txt
-pip install -e .
-pip install -e gesticulator/visualization
-```
+- Clone the repository:
+  ```
+  git clone git@github.com:Svito-zar/gesticulator.git
+  ```
+- (optional) Create and activate virtual environment:
+  ```
+  virtualenv v_env --py=3.6.9
+  source v_env/bin/activate
+  ```
+  
+- Install the dependencies:
+  ```
+  python install_script.py
+  ```
 
-### Documentation
-
-For all the scripts which we refer to in this repo description there are several command line arguments which you can see by calling them with the `--help` argument.
-
-## Demo
+### Demonstration
 Head over to the `demo` folder for a quick demonstration if you're not interested in training the model yourself.
 
+### Documentation
+For all the scripts which we refer to in this repo description there are several command line arguments which you can see by calling them with the `--help` argument.
 
-## Loading and saving models
+### Loading and saving models
 - Pretrained model files can be loaded with the following command
   ```
-  from gesticulator.model import GesticulatorModel
+  from gesticulator.model.model import GesticulatorModel
   
   loaded_model = GesticulatorModel.load_from_checkpoint(<PATH_TO_MODEL_FILE>)
   ```
 - If the `--save_model_every_n_epochs argument` is provided to `train.py`, then the model will be saved regularly during training. 
 
-## 1. Obtain the data
+___
+## Training the model
+### 1. Obtain the data
 - Download the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
 - Either obtain transcriptions by yourself:
   - Transcribe the audio using Automatic Speech Recognition (ASR), such as [Google ASR](https://cloud.google.com/speech-to-text/)
   - Manually correct the transcriptions and add punctuations
 - Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `speech`, `motion` and `transcript`.
 
-## 2. Pre-process the data
+### 2. Pre-process the data
 ```
 cd gesticulator/data_processing
 
@@ -55,44 +62,43 @@ python split_dataset.py
 
 # Encode all the features
 python process_dataset.py
+
+# Go back to the gesticulator/gesticulator directory
+cd ..
 ```
 
 By default, the model expects the dataset in the `dataset/raw` folder, and the processed dataset will be available in the `dataset/processed folder`. If your dataset is elsewhere, please provide the correct paths with the `--raw_data_dir` and `--proc_data_dir` command line arguments.
 
-## 3. Learn speech-driven gesture generation model
-In order to train and evaluate the model, run
-
+### 3. Learn speech- and text-driven gesture generation model
+In order to train the model, run
 ```
-cd ..
-python train.py
+python train.py 
 ```
-
 The model configuration and the training parameters are automatically read from the `gesticulator/config/default_model_config.yaml` file. 
 
-### Notes
+#### Notes
 
-The results will be available in the `results/last_run/` folder, where you will find the Tensorboard logs alongside with the trained model file and the generated output on the semantic test segments (described in the paper).
+The results will be available in the `results/last_run/` folder, where you will find the Tensorboard logs alongside with the trained model file. 
+
+It is possible to visualize the predicted motion on the validation data during training by setting the `save_val_predictions_every_n_epoch` parameter in the config file.
 
 If the `--run_name <name>` command-line argument is provided, the `results/<name>` folder will be created and the results will be stored there. This can be very useful when you want to keep your logs and outputs for separate runs.
 
-To train the model on the GPU, provide the `--gpus` argument. For details regarding training parameters, please [visit this link](https://pytorch-lightning.readthedocs.io/en/0.8.4/trainer.html#gpus).
-
-## 4. Visualize gestures
-The gestures generated during training, validation and testing can be found in the `results/<run_name>/generated_gestures` folder. By default, we only store the outputs on the semantic test segments, but other outputs can be saved as well - see the config file for the corresponding parameters.
-
-In order to manually generate the the videos from the raw coordinates, run 
+To **train the model on the GPU**, provide the `--gpus` argument [as described here](https://pytorch-lightning.readthedocs.io/en/0.8.4/trainer.html#gpus). For details regarding training parameters, please [visit this link](https://pytorch-lightning.readthedocs.io/en/0.8.4/trainer.html).
+___
+## Evaluating the model
+### Visualizing the results
+In order to generate and visualize gestures on the test dataset, run
 
 ```
-cd visualization/aamas20_visualizer
-python generate_videos.py
+python test.py --use_semantic_input --use_random_input
 ```
 
-If you changed the arguments of `train.py` (e.g. `run_name`), you might have to provide them for `generate_videos.py` as well.
-Please check the required arguments by running
+If you set the `run_name` argument during training, then please provide it to this script as well by adding `--run_name <run_name>` to the command above.
 
-`python generate_videos.py --help`
+The generated motion is stored in the `results/<run_name>/generated_gestures` folder. By default, we store the motion 1) in the exponential map format 2) as `.mp4` videos, but other output formats, such as 3D coordinates can be saved as well - see the config file for details.
 
-## 5. Quantitative evaluation
+### Quantitative evaluation
 
 For the quantitative evaluation (velocity histograms and jerk), you may use the scripts in the `gesticulator/obj_evaluation` folder.
 
