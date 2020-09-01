@@ -114,7 +114,7 @@ If you use this code in your research please cite it:
 }
 ```
 
-For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using their [IVA'18 paper](https://www.scss.tcd.ie/Rachel.McDonnell/papers/IVA2018b.pdf).
+For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using the corresponding [IVA'18 paper](https://dl.acm.org/doi/10.1145/3267851.3267898).
 
 ## Contact
 If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
