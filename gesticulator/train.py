@@ -40,11 +40,9 @@ def main(hparams):
     trainer = Trainer.from_argparse_args(hparams, logger=logger, callbacks = callbacks,
         checkpoint_callback=False, early_stop_callback=False)
 
-    if not hparams.no_train:
-        trainer.fit(model)
+    trainer.fit(model)
+    trainer.save_checkpoint(os.path.join(model.save_dir, "trained_model.ckpt"))
 
-    if not hparams.no_test:
-        trainer.test(model)
    
 def create_logger(model_save_dir):
     # str.rpartition(separator) cuts up the string into a 3-tuple of (a,b,c), where
@@ -58,12 +56,6 @@ def create_logger(model_save_dir):
 def add_training_script_arguments(parser):
     parser.add_argument('--save_model_every_n_epochs', '-ckpt_freq', type=int, default=0,
                         help="The frequency of model checkpoint saving.")
-
-    parser.add_argument('--no_train', '-no_train', action="store_true",
-                        help="If set, skip the training phase")
-
-    parser.add_argument('--no_test', '-no_test', action="store_true",
-                        help="If set, skip the testing phase")
     return parser
 
 if __name__ == '__main__':

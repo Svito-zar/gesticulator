@@ -150,7 +150,7 @@ class PredictionSavingMixin(ABC):
                 
                 self.save_prediction(predicted_gestures, "test", filename)
             
-        print("Done!", flush=True)
+        print(f"Generated {mode} test predictions to {self.hparams.generated_gestures_dir}", flush=True)
 
     # ---- Private functions ----
 

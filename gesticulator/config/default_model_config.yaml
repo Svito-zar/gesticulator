@@ -37,7 +37,7 @@ n_epochs_with_teacher_forcing: 7
 save_val_predictions_every_n_epoch: 0 # Disabled by default
 save_train_predictions_every_n_epoch: 0 # Disabled by default
 saved_prediction_duration_sec: 9
-prediction_save_formats: ["video", "raw_gesture"] # Can be "bvh_file" and "3d_coordinates" too
+prediction_save_formats: ["video", "3d_coordinates"] # Can be "bvh_file" and "3d_coordinates" too
 
 # ---- Binary flags ---- 
 generate_semantic_test_predictions: False

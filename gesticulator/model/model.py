@@ -68,10 +68,11 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             self.create_result_folder()
             # The datasets are loaded in this constructor because they contain 
             # necessary information for building the layers (namely the audio dimensionality)
-            self.load_datasets()
+            self.load_train_and_val_datasets()
             self.hparams.audio_dim = self.train_dataset.audio_dim
             self.calculate_mean_pose()
-
+        
+        self.load_test_dataset()
         self.construct_layers(self.hparams)
         self.init_layers()
         
@@ -85,12 +86,23 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         """
         self.init_prediction_saving_params()
 
+    def load_test_dataset(self):
+        try:
+            self.test_dataset  = ValidationDataset(self.hparams.data_dir, self.hparams.past_context, self.hparams.future_context)
+        except FileNotFoundError as err:
+            abs_data_dir = os.path.abspath(self.hparams.data_dir)
+            if not os.path.isdir(abs_data_dir):
+                print(f"ERROR: The given dataset directory {abs_data_dir} does not exist!")
+                print("Please, set the correct path with the --data_dir option!")
+            else:
+                print("ERROR: Missing data in the dataset!")
+            exit(-1)
 
-    def load_datasets(self):
+
+    def load_train_and_val_datasets(self):
         try:
             self.train_dataset = SpeechGestureDataset(self.hparams.data_dir, self.hparams.use_pca, train=True)
             self.val_dataset   = SpeechGestureDataset(self.hparams.data_dir, self.hparams.use_pca, train=False)
-            self.test_dataset  = ValidationDataset(self.hparams.data_dir, self.hparams.past_context, self.hparams.future_context)
         except FileNotFoundError as err:
             abs_data_dir = os.path.abspath(self.hparams.data_dir)
             if not os.path.isdir(abs_data_dir):
