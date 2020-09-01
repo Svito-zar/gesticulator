@@ -14,22 +14,22 @@ def load_model(test_params):
     model = GesticulatorModel.load_from_checkpoint(test_params.model_file, inference_mode=True)
     
     # Make sure that at least one of the two test datasets are enabled
-    if not test_params.test_semantic and not test_params.test_random:
+    if not test_params.use_semantic_input and not test_params.use_random_input:
         print("ERROR: Please provide at least one of the following two flags:")
-        print("       python test.py --test_semantic (to use the semantic test input segments)")
-        print("       python test.py --test_random (to use the random test input segments)")
+        print("       python test.py --use_semantic_input (to use the semantic test input segments)")
+        print("       python test.py --use_random_input (to use the random test input segments)")
         exit(-1)
 
-    model.hparams.generate_semantic_test_predictions = test_params.test_semantic
-    model.hparams.generate_random_test_predictions = test_params.test_random
+    model.hparams.generate_semantic_test_predictions = test_params.use_semantic_input
+    model.hparams.generate_random_test_predictions = test_params.use_random_input
     
     return model
 
 def add_test_script_arguments(parser):
-    parser.add_argument('--test_semantic', '-semantic', action="store_true",
+    parser.add_argument('--use_semantic_input', '-semantic', action="store_true",
                         help="If set, test the model with the semantic input segments")
 
-    parser.add_argument('--test_random', '-random', action="store_true",
+    parser.add_argument('--use_random_input', '-random', action="store_true",
                         help="If set, test the model with the random input segments")
     
     parser.add_argument('--model_file', '-model', help="Path to the model checkpoint to be loaded")
@@ -39,7 +39,7 @@ def add_test_script_arguments(parser):
 if __name__ == "__main__":
     """
     Usage: 
-        python test.py (--model_file MODEL_FILE | --run_name RUN_NAME ) [--test_semantic] [--test_random]
+        python test.py (--model_file MODEL_FILE | --run_name RUN_NAME ) [--use_semantic_input] [--use_random_input]
     """
     # Model parameters are added here
     parser = construct_model_config_parser()
