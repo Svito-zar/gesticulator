@@ -103,13 +103,13 @@ class PredictionSavingMixin(ABC):
         Generate gestures either for the semantic or the random test input
         segments (depending on the mode argument), and save the results.
         """
-        if mode == 'semantic':
+        if mode == 'seman':
             # The start times of the semantic test segments in the paper
             segment_start_times = {
                 # These correspond to the NaturalTalking_04/05 files
                 '04': [55, 150, 215, 258, 320, 520, 531], 
                 '05': [15, 53, 74, 91, 118, 127, 157, 168, 193, 220, 270, 283, 300] }
-        elif mode == 'random':
+        elif mode == 'rand':
             # Random segment start times from the paper
             segment_start_times = {
                 '04': [ 5.5, 20.8, 45.6, 66, 86.3, 106.5, 120.4, 163.7,
@@ -117,7 +117,7 @@ class PredictionSavingMixin(ABC):
                 '05': [ 30, 42, 102, 140, 179, 205, 234, 253, 329, 345,
                         384, 402, 419, 437, 450 ] }
         else:
-            print(f"Unknown test prediction mode '{mode}'! Possible values: 'semantic' or 'random'.")
+            print(f"Unknown test prediction mode '{mode}'! Possible values: 'seman' or 'rand'.")
             exit(-1)
             
         print(f"\nGenerating {mode} test gestures:", flush=True)
@@ -126,11 +126,13 @@ class PredictionSavingMixin(ABC):
                              + self.hparams.past_context \
                              + self.hparams.future_context 
 
+        segment_idx = 0
         for file_num in segment_start_times.keys():
             audio_full = self.test_prediction_inputs[file_num]['audio']
             text_full = self.test_prediction_inputs[file_num]['text']
 
-            for i, start_time in enumerate(segment_start_times[file_num]):
+            for start_time in segment_start_times[file_num]:
+                segment_idx += 1
                 start_frame = int(start_time * self.data_fps - self.hparams.past_context)
                 end_frame = start_frame + duration_in_frames
                 # Crop and add the batch dimension
@@ -145,7 +147,7 @@ class PredictionSavingMixin(ABC):
                     pca = load('utils/pca_model_12.joblib')
                     predicted_gestures = pca.inverse_transform(predicted_gestures)
         
-                filename = f"input_{file_num}_{mode}_segment_" + str(i+1).zfill(2)
+                filename = f"{mode}_{segment_idx}"
                 print("\t-", filename)
                 
                 self.save_prediction(predicted_gestures, "test", filename)
@@ -268,13 +270,13 @@ class PredictionSavingMixin(ABC):
         
         # Raw numpy array format
         if is_enabled("raw_gesture"):
-            enabled_format_paths["raw_gesture"] = get_persistent_path("raw_gestures", ".npy")      
+            enabled_format_paths["raw_gesture"] = get_persistent_path("raw_gestures", "_exp_map.npy")      
         # NOTE: there's no need for a temporary path if the raw gestures are disabled
         #       because only the visualize() call creates temporary files
 
         # 3D coordinates
         if is_enabled("3d_coordinates"):
-            enabled_format_paths["3d_coordinates"] = get_persistent_path("3d_coordinates", ".npy")
+            enabled_format_paths["3d_coordinates"] = get_persistent_path("3d_coordinates", "_3d.npy")
         else:
             disabled_format_paths["3d_coordinates"] = get_temporary_path("_coordinates.npy")
 

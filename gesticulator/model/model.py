@@ -539,10 +539,10 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
                 '05': self.load_test_prediction_input('05')}
 
         if self.hparams.generate_semantic_test_predictions:
-            self.generate_test_predictions(mode='semantic')
+            self.generate_test_predictions(mode='seman')
         
         if self.hparams.generate_random_test_predictions:
-            self.generate_test_predictions(mode='random')
+            self.generate_test_predictions(mode='rand')
 
         test_mean = outputs[0]['test_example'].mean()
         tqdm_dict = {'test_mean': test_mean}
