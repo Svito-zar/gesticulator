@@ -17,8 +17,13 @@ This repository contains PyTorch based implementation of the framework for seman
   ```
 - (optional) Create and activate virtual environment:
   ```
-  virtualenv v_env --py=3.6.9
-  source v_env/bin/activate
+  virtualenv gest_env --py=3.6.9
+  source gest_env/bin/activate
+  ```
+  or 
+  ```
+  conda create -n gest_env python=3.6.9
+  conda activate gest_env
   ```
   
 - Install the dependencies:
@@ -44,10 +49,8 @@ For all the scripts which we refer to in this repo description there are several
 ___
 ## Training the model
 ### 1. Obtain the data
-- Download the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
-- Either obtain transcriptions by yourself:
-  - Transcribe the audio using Automatic Speech Recognition (ASR), such as [Google ASR](https://cloud.google.com/speech-to-text/)
-  - Manually correct the transcriptions and add punctuations
+- Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
+- Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
 - Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `speech`, `motion` and `transcript`.
 
 ### 2. Pre-process the data
@@ -114,7 +117,19 @@ If you use this code in your research please cite it:
 }
 ```
 
-For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using the corresponding [IVA'18 paper](https://dl.acm.org/doi/10.1145/3267851.3267898).
+For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using the following bib file:
+```
+@inproceedings{ferstl2018investigating,
+author = {Ferstl, Ylva and McDonnell, Rachel},
+title = {Investigating the Use of Recurrent Motion Modelling for Speech Gesture Generation},
+year = {2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+booktitle = {Proceedings of the 18th International Conference on Intelligent Virtual Agents},
+series = {IVA '18}
+}
+```
+
 
 ## Contact
 If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
