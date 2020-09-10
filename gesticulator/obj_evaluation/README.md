@@ -43,10 +43,10 @@ In addition, this script supports histogram visualization. To enable visualizati
 
 ```sh
 # Compute velocity histogram
-python calc_histogram.py -m velocity -w 0.05 --visualize  # You can change the bin width of the histogram
+python calc_histogram.py -m velocity -w 1.0 --visualize  # You can change the bin width of the histogram
 
 # Compute acceleration histogram
-python calc_histogram.py -m acceleration -w 0.05 --visualize
+python calc_histogram.py -m acceleration -w 1.0 --visualize
 ```
 
 Note: `calc_histogram.py` computes HMD for both original and predicted gestures. The HMD of the original gestures will be stored in `result/original` by default.
