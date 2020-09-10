@@ -6,13 +6,13 @@ This directory provides the scripts for quantitative evaluation of our gesture g
 - Histogram of Moving Distance (HMD, for velocity/acceleration)
 
 ## Data preparation 
-  - Download the reference gestures for the test dataset from [this link](LINK) <**LINK GOES HERE!!!**> and put them into the `data/original` folder.
+  - Download the reference gestures for the test dataset from [this link](https://kth.app.box.com/s/x1wiul1ajnggc89nvdqtvdh2udxtkk1a) and put the `GT` folder from it into the `data/original` folder.
   - Move the 3D coordinates of the generated gestures to the `data/predicted` folder. With the default config, `train.py` generates those coordinates in the `results/<run_name>/generated_gestures/test/3d_coordinates/` folder.
   - If the 3D coordinates were not saved with the training script (by default they are), but the raw gestures were, then they can be generated using the `gesticulator/visualization/motion_visualizer/generate_videos.py` script (the coordinates will be available in the `results/<run_name>/generated_gestures/test/manually_generated_videos/` folder. 
 
 ## Run evaluations
 
- `calc_jerk.py`, and `calc_distance.py` support different quantitative measures, described below.
+ `calc_jerk.py`, and `calc_histogram.py` support different quantitative measures, described below.
 
 The `--original` or `-o` option specifies the directory for original data, while the `--predicted` or `-p` sets the directory to the predicted data. Both the directories are expected to be subdirectories of `data`, and their default values are `original` and `predicted`.
 
@@ -28,25 +28,25 @@ You can select the measure to compute by `--measure` or `-m` option (default: je
 python calc_jerk.py -m jerk
 
 # Compute AA
-python calc_jerks.py -m acceleration
+python calc_jerk.py -m acceleration
 ```
 
-Note: `calc_jerk.py` computes AJ/AA for both original and predicted gestures. The AJ/AA of the original gestures will be stored in `result/original` by default. The AJ/AA of the predicted gestures will be stored in `result/<your_prediction_dir>`.
+Note: `calc_jerk.py` computes AJ/AA for both original and predicted gestures. The AJ/AA of the original gestures will be stored in `result/original` by default. The AJ/AA of the predicted gestures will be stored in `result/<your_prediction_dir>` (so `result/predicted` by default).
 
 ### HMD
 
 Histogram of Moving Distance (HMD) shows the velocity/acceleration distribution of gesture motion.
 
-To calculate HMD, you can use `calc_distance.py`.
+To calculate HMD, you can use `calc_histogram.py`.
 You can select the measure to compute by `--measure` or `-m` option (default: velocity).  
 In addition, this script supports histogram visualization. To enable visualization, use `--visualize` or `-v` option.
 
 ```sh
 # Compute velocity histogram
-python calc_distance.py -m velocity -w 0.05  # You can change the bin width of the histogram
+python calc_histogram.py -m velocity -w 0.05 --visualize  # You can change the bin width of the histogram
 
 # Compute acceleration histogram
-python calc_distance.py -m acceleration -w 0.05
+python calc_histogram.py -m acceleration -w 0.05 --visualize
 ```
 
-Note: `calc_distance.py` computes HMD for both original and predicted gestures. The HMD of the original gestures will be stored in `result/original` by default.
+Note: `calc_histogram.py` computes HMD for both original and predicted gestures. The HMD of the original gestures will be stored in `result/original` by default.

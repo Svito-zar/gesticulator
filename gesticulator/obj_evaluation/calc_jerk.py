@@ -113,11 +113,11 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Calculate prediction errors')
-    parser.add_argument('--original', '-o', default='GT',
+    parser.add_argument('--original', '-o', default='original',
                         help='Original gesture directory')
-    parser.add_argument('--predicted', '-p', default='NoPCA',
+    parser.add_argument('--predicted', '-p', default='predicted',
                         help='Predicted gesture directory')
-    parser.add_argument('--measure', '-m', default='acceleration',
+    parser.add_argument('--measure', '-m', default='acceleration',  
                         help='Measure to calculate (jerk or acceleration)')
     parser.add_argument('--out', default='result',
                         help='Directory to output the result')

@@ -72,14 +72,14 @@ def generate_videos(raw_input_folder, output_folder, run_name, data_pipe_dir, st
         os.remove(resulting_npy_file)
 
 def create_arg_parser():
-    parser = argparse.ArgumentParser(description="Transform BVH files into an array of feature-vectors")
+    parser = argparse.ArgumentParser(description="Generate videos from the motion that is represented by exponential maps")
     
     parser.add_argument("--start_t", "-st", default=0, 
                         help="Start time for the sequence")
     parser.add_argument("--end_t", "-end", default=10, 
                         help="End time for the sequence")
     parser.add_argument("--raw_input_folder", "-in", default=None,
-                        help="""The folder that contains the raw input data for creating the videos
+                        help="""The folder that contains the motion input (represented with exponential maps) for creating the videos
                              (default: ../../../results/<run_name>/generated_gestures/test/raw_gestures)""")
     parser.add_argument("--output_folder", "-out", default=None,
                         help="""The folder where the generated videos will be saved
