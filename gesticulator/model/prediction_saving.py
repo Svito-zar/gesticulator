@@ -115,7 +115,7 @@ class PredictionSavingMixin(ABC):
                 '04': [ 5.5, 20.8, 45.6, 66, 86.3, 106.5, 120.4, 163.7,
                         180.8, 242.3, 283.5, 300.8, 330.8, 349.6, 377 ],
                 '05': [ 30, 42, 102, 140, 179, 205, 234, 253, 329, 345,
-                        384, 402, 419, 437, 450 ] }
+                        384, 402, 419, 437] } # , 450 ] }
         else:
             print(f"Unknown test prediction mode '{mode}'! Possible values: 'seman' or 'rand'.")
             exit(-1)
