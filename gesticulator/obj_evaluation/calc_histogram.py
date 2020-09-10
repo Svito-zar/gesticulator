@@ -107,9 +107,9 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Calculate histograms of moving distances')
-    parser.add_argument('--original', '-o', default='GT',
+    parser.add_argument('--original', '-o', default='original',
                         help='Original gesture directory')
-    parser.add_argument('--predicted', '-p', default='NoPCA',
+    parser.add_argument('--predicted', '-p', default='predicted',
                         help='Predicted gesture directory')
     parser.add_argument('--gesture', '-g', #required=True,
                         help='Directory storing predicted txt files')
@@ -125,8 +125,9 @@ def main():
                         help='Directory to output the result')
     args = parser.parse_args()
 
-    predicted_dir = "data/" + args.predicted + "/"  # os.path.join(args.predicted, args.gesture)
-    original_dir = "data/" + args.original + "/"
+    
+    predicted_dir = os.path.join("data/", args.predicted)
+    original_dir = os.path.join("data/", args.original)
 
     original_files = sorted(glob.glob(os.path.join(original_dir, '*.npy')))
 
@@ -208,7 +209,8 @@ def main():
         plt.plot(bins[:-1], original_total, label=args.original)
         plt.plot(bins[:-1], predicted_total, label=args.predicted)
         plt.legend()
-        plt.xlabel('Velocity (cm/s)')
+        xlabel = 'Velocity (cm/s)' if args.measure == 'velocity' else 'Acceleration (cm / $s^2$)'
+        plt.xlabel(xlabel)
         plt.ylabel('Bin counts')
         plt.title('Histograms of Moving Distance ({})'.format(args.measure))
         plt.tight_layout()
