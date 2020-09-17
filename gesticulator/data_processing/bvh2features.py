@@ -27,6 +27,9 @@ import joblib as jl
 def extract_joint_angles(bvh_dir, files, dest_dir, pipeline_dir, fps):
     p = BVHParser()
 
+    if not os.path.exists(pipeline_dir):
+        raise Exception("Pipeline dir for the motion processing ", pipeline_dir, " does not exist! Change -pipe flag value.")
+
     data_all = list()
     for f in files:
         ff = os.path.join(bvh_dir, f + '.bvh')
@@ -68,7 +71,7 @@ if __name__ == '__main__':
                                    help="Path where original motion files (in BVH format) are stored")
     parser.add_argument('--dest_dir', '-dest', required=True,
                                    help="Path where extracted motion features will be stored")
-    parser.add_argument('--pipeline_dir', '-pipe', default="./utils/",
+    parser.add_argument('--pipeline_dir', '-pipe', default="../utils/",
                         help="Path where the motion data processing pipeline will be stored")
 
     params = parser.parse_args()

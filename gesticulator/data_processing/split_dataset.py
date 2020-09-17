@@ -15,13 +15,17 @@ from gesticulator.data_processing.data_params import dataset_argparser
 
 # Indices for train/dev/test split
 DEV_LAST_ID = 3
-TEST_LAST_ID = 6
-TRAIN_LAST_ID = 31
+TEST_LAST_ID = 4
+TRAIN_LAST_ID = 24
 
-audio_prefix = "NaturalTalking_0"
-motion_prefix = "NaturalTalking_0"
+audio_prefix = "Recording_"
+motion_prefix = "Recording_"
 
 def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
+
+    # add leading zeros
+    ind = str(ind).zfill(3)
+
     # Copy audio
     filename = f"{audio_prefix}{ind}{suffix}.wav"
     original_file_path = path.join(raw_d_dir, "speech", filename)
@@ -109,8 +113,8 @@ def _files_to_pandas_dataframe(extracted_dir, set_name, idx_range):
     for idx in idx_range:
         try:
             # original files
-            input_file = path.abspath(path.join(extracted_dir, set_name, "inputs", audio_prefix + str(idx) + ".wav"))
-            label_file = path.abspath(path.join(extracted_dir, set_name, "labels", motion_prefix + str(idx) + ".npz"))
+            input_file = path.abspath(path.join(extracted_dir, set_name, "inputs", audio_prefix + str(idx).zfill(3) + ".wav"))
+            label_file = path.abspath(path.join(extracted_dir, set_name, "labels", motion_prefix + str(idx).zfill(3) + ".npz"))
             wav_size = path.getsize(input_file)
             files.append((input_file, wav_size, label_file))
         except OSError:

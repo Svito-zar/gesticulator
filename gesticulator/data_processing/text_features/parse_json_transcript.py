@@ -145,6 +145,38 @@ def encode_json_transcript_with_bert(json_file, bert_model):
                 sentence_word_indices_list = []
                 sentence_extra_features_list = []
 
+    # In the GENEA dataset, some input transcriptions don't end with an
+    # end-of-sentence token. We programmatically correct this error below.
+    if not is_sentence_over:
+        # The last sentence did not end with an end-of-sentence token
+        # -> add one to the last word, then process the entire sentence
+        non_filler_words_in_sentence[-1] += "."
+        # Concatenate the words using space as a separator
+        sentence = [' '.join(non_filler_words_in_sentence)]
+
+        input_to_bert, encoded_words = bert_model(sentence)[0]
+
+        if input_to_bert[-1] not in delimiters:
+            print("ERROR: missing delimiter in input to BERT!")
+            print("""\nNOTE: Please make sure that the last 'word'
+            field of each 'alternatives' segment in the input JSON file
+            ends with a punctuation mark (. ? or !)""")
+            print("The current sentence:", sentence)
+            print("The input to BERT:", bert_input)
+            exit(-1)
+
+        # Add the silence/filler encodings at the reserved indices
+        encoded_words = [silence_encoding] + [filler_encoding] + encoded_words
+
+        # Frame-by-frame features of the entire sentence
+        sentence_features = \
+            [ list(encoded_words[word_idx]) + sentence_extra_features_list[i]
+                for i, word_idx in enumerate(sentence_word_indices_list) ]
+
+        # Add the sentence to the final feature list
+        feature_array.extend(sentence_features)
+
+
     if len(feature_array) != elapsed_deciseconds:
         print(f"ERROR: The number of frames in the encoded transcript ({len(feature_array)})") 
         print(f"       does not match the number of frames in the input ({elapsed_deciseconds})!")
