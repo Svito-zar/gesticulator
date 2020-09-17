@@ -51,7 +51,7 @@ ___
 ### 1. Obtain the data
 - Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
 - Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
-- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `speech`, `motion` and `transcript`.
+- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcript`.
 
 ### 2. Pre-process the data
 ```

@@ -28,7 +28,7 @@ def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
 
     # Copy audio
     filename = f"{audio_prefix}{ind}{suffix}.wav"
-    original_file_path = path.join(raw_d_dir, "speech", filename)
+    original_file_path = path.join(raw_d_dir, "Audio", filename)
 
     if os.path.isfile(original_file_path):
         target_file_path = path.join(processed_d_dir, data_split, "inputs", filename)
@@ -36,7 +36,7 @@ def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
 
     # Copy text
     filename = f"{audio_prefix}{ind}{suffix}.json"
-    transcript_file_path = path.join(raw_d_dir, "transcript", filename)
+    transcript_file_path = path.join(raw_d_dir, "Transcript", filename)
     
     if os.path.isfile(transcript_file_path):
         target_file_path = path.join(processed_d_dir, data_split, "inputs", filename)
@@ -44,7 +44,7 @@ def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
 
     # Copy gestures
     filename = f"{motion_prefix}{ind}{suffix}.npz"
-    original_file_path = path.join(raw_d_dir, "motion", filename)
+    original_file_path = path.join(raw_d_dir, "Motion", filename)
     
     if os.path.isfile(original_file_path):
         target_file_path = path.join(processed_d_dir, data_split, "labels", filename)
@@ -128,7 +128,7 @@ def _files_to_pandas_dataframe(extracted_dir, set_name, idx_range):
 def check_dataset_directories(raw_data_dir):
     """
     Verify that 'raw_data_dir' exists and that it contains the 
-    'speech', 'transcript' and 'motion' subdirectories.
+    'Audio', 'Transcript' and 'Motion' subdirectories.
     """
     if not path.isdir(raw_data_dir):
         abs_path = path.abspath(raw_data_dir)
@@ -137,9 +137,9 @@ def check_dataset_directories(raw_data_dir):
         print("Please, provide the correct path to the dataset in the `-raw_data_dir` argument.")
         exit(-1)
 
-    speech_dir     = path.join(raw_data_dir, "speech")
-    transcript_dir = path.join(raw_data_dir, "transcript")
-    motion_dir     = path.join(raw_data_dir, "motion")
+    speech_dir     = path.join(raw_data_dir, "Audio")
+    transcript_dir = path.join(raw_data_dir, "Transcript")
+    motion_dir     = path.join(raw_data_dir, "Motion")
 
     for sub_dir in [speech_dir, transcript_dir, motion_dir]:
         if not path.isdir(sub_dir):
