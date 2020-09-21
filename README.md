@@ -99,7 +99,7 @@ python evaluate.py --use_semantic_input --use_random_input
 
 If you set the `run_name` argument during training, then please provide the path to the saved model checkpoint by using the `--model_file` option.
 
-The generated motion is stored in the `results/<run_name>/generated_gestures` folder. By default, we store the motion 1) in the exponential map format 2) as `.mp4` videos, but other output formats, such as 3D coordinates can be saved as well - see the config file for details.
+The generated motion is stored in the `results/<run_name>/generated_gestures` folder 1) in the exponential map format 2) as `.mp4` videos and 3) as 3D coordinates (which can be used for objective evaluation).
 
 ### Quantitative evaluation
 
