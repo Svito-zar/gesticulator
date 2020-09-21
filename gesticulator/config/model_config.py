@@ -115,15 +115,7 @@ def construct_model_config_parser(add_trainer_args = True):
                help='The format(s) in which the predictions will be saved.'
                     'To enable multiple formats, provide the formats separately e.g. '
                     '--prediction_save_formats bvh_file --prediction_save_formats videos')
-    # Flags
-    parser.add('--generate_semantic_test_predictions', '-save_semantic', action='store_true',
-               help='If set, save the learned model\'s predictions on the'
-                    'predefined semantic test segments')
-    
-    parser.add('--generate_random_test_predictions', '-save_random', action='store_true',
-                help='If set, save the learned model\'s predictions on the'
-                     'predefined random test segments')
-
+                    
     parser.add('--use_pca', '-pca', action='store_true',
                help='If set, use PCA on the gestures')
 
