@@ -145,7 +145,7 @@ class PredictionSavingMixin(ABC):
                 filename = f"{mode}_{segment_idx}"
                 print("\t-", filename)
                 
-                self.save_prediction(predicted_gestures, "test", filename)
+                self.save_prediction(predicted_gestures, "evaluation", filename)
             
         print(f"Generated {mode} test predictions to {self.hparams.generated_gestures_dir}", flush=True)
 
