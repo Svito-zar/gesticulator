@@ -40,8 +40,6 @@ saved_prediction_duration_sec: 9
 prediction_save_formats: ["video", "3d_coordinates", "raw_gesture"] # Can be "bvh_file" as well
 
 # ---- Binary flags ---- 
-generate_semantic_test_predictions: False
-generate_random_test_predictions: False
 use_pca: False
 use_recurrent_speech_enc: False
 no_overwrite_warning: False

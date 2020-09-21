@@ -1,29 +1,25 @@
-from os.path import isfile, join
+from os import makedirs
+from os.path import isfile, join, isdir
 from gesticulator.model.model import GesticulatorModel
 from config.model_config import construct_model_config_parser
 from pytorch_lightning import Trainer
 
 def main(test_params):
-    model = load_model(test_params)
-    trainer = Trainer.from_argparse_args(test_params, logger=False)
-
-    trainer.test(model)
-
-def load_model(test_params):
-    """This function enables the test datasets that were selected by the user"""
-    model = GesticulatorModel.load_from_checkpoint(test_params.model_file, inference_mode=True)
+    model = GesticulatorModel.load_from_checkpoint(
+        test_params.model_file, inference_mode=True)
     
-    # Make sure that at least one of the two test datasets are enabled
-    if not test_params.use_semantic_input and not test_params.use_random_input:
-        print("ERROR: Please provide at least one of the following two flags:")
-        print("       python test.py --use_semantic_input (to use the semantic test input segments)")
-        print("       python test.py --use_random_input (to use the random test input segments)")
-        exit(-1)
+    create_save_dirs(model)
 
-    model.hparams.generate_semantic_test_predictions = test_params.use_semantic_input
-    model.hparams.generate_random_test_predictions = test_params.use_random_input
-    
-    return model
+    model.generate_evaluation_videos(
+        semantic = test_params.use_semantic_input,
+        random = test_params.use_random_input)
+
+def create_save_dirs(model):
+    save_dir = join(model.hparams.generated_gestures_dir, "evaluation")
+    for output_type in ["raw_gestures", "3d_coordinates", "videos"]:
+        output_dir = join(save_dir, output_type)
+        if not isdir(output_dir):
+            makedirs(output_dir)
 
 def add_test_script_arguments(parser):
     parser.add_argument('--use_semantic_input', '-semantic', action="store_true",
@@ -59,5 +55,8 @@ if __name__ == "__main__":
             print("       Alternatively, you can provide the run_name argument you set during training:")
             print("         python test.py --run_name RUN_NAME")
             exit(-1)
-    
+
+    if not args.use_semantic_input and not args.use_random_input:
+        print("ERROR: Please choose your evaluation type by providing the -random or -semantic flags!")    
+
     main(args)

@@ -72,7 +72,6 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             self.hparams.audio_dim = self.train_dataset.audio_dim
             self.calculate_mean_pose()
         
-        self.load_test_dataset()
         self.construct_layers(self.hparams)
         self.init_layers()
         
@@ -85,19 +84,6 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         Called at the beginning of trainer.fit() and trainer.test().
         """
         self.init_prediction_saving_params()
-
-    def load_test_dataset(self):
-        try:
-            self.test_dataset  = ValidationDataset(self.hparams.data_dir, self.hparams.past_context, self.hparams.future_context)
-        except FileNotFoundError as err:
-            abs_data_dir = os.path.abspath(self.hparams.data_dir)
-            if not os.path.isdir(abs_data_dir):
-                print(f"ERROR: The given dataset directory {abs_data_dir} does not exist!")
-                print("Please, set the correct path with the --data_dir option!")
-            else:
-                print("ERROR: Missing data in the dataset!")
-            exit(-1)
-
 
     def load_train_and_val_datasets(self):
         try:
@@ -233,14 +219,6 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         loader = torch.utils.data.DataLoader(
             dataset=self.val_dataset,
             batch_size=self.hparams.batch_size,
-            shuffle=False)
-
-        return loader
-
-    def test_dataloader(self):
-        loader = torch.utils.data.DataLoader(
-            dataset=self.test_dataset,
-            batch_size=1,
             shuffle=False)
 
         return loader
@@ -516,38 +494,30 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
 
         return {'avg_val_loss': avg_loss, "log": tqdm_dict}
 
-    def test_step(self, batch, batch_nb):
-        speech = batch["audio"]
-        text = batch["text"]
-        
-        predicted_gesture = self.forward(speech, text, motion=None, use_conditioning=True)
-        
-        return {'test_example': predicted_gesture}
-
-    def test_epoch_end(self, outputs):
+    def generate_evaluation_videos(self, semantic, random):
         """
         Load the selected semantic and/or random segments 
         for generating the evaluation videos.
         
+        Args:
+            semantic (bool):  if True, evaluate the model on the semantic input segments
+            random (bool):  if True, evaluate the model on the random input segments
+
         NOTE: The data has to be loaded here because in the constructor,
         the model is still on the CPU, therefore the data would be always loaded
         onto the CPU as well, causing a device mismatch if the GPU is enabled.
         """
-        if "test" in self.enabled_phases:
-            self.test_prediction_inputs = {
-                '04': self.load_test_prediction_input('04'),
-                '05': self.load_test_prediction_input('05')}
-
-        if self.hparams.generate_semantic_test_predictions:
-            self.generate_test_predictions(mode='seman')
+        self.test_prediction_inputs = {
+            '04': self.load_test_prediction_input('04'),
+            '05': self.load_test_prediction_input('05')}
         
-        if self.hparams.generate_random_test_predictions:
+        if semantic:
+            self.generate_test_predictions(mode='seman')
+    
+        if random:
             self.generate_test_predictions(mode='rand')
 
-        test_mean = outputs[0]['test_example'].mean()
-        tqdm_dict = {'test_mean': test_mean}
-
-        return {'test_mean': test_mean, "log": tqdm_dict}
+        return
   
     
     def on_epoch_start(self):

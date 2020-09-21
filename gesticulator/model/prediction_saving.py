@@ -45,11 +45,6 @@ class PredictionSavingMixin(ABC):
         if self.hparams.save_val_predictions_every_n_epoch > 0:
             self.enabled_phases.append("validation")
             self.save_val_predictions = True
-  
-        # Testing
-        if self.hparams.generate_semantic_test_predictions \
-        or self.hparams.generate_random_test_predictions:
-            self.enabled_phases.append("test")
 
         # Create the output directories
         for phase in self.enabled_phases: 
@@ -150,7 +145,7 @@ class PredictionSavingMixin(ABC):
                 filename = f"{mode}_{segment_idx}"
                 print("\t-", filename)
                 
-                self.save_prediction(predicted_gestures, "test", filename)
+                self.save_prediction(predicted_gestures, "evaluation", filename)
             
         print(f"Generated {mode} test predictions to {self.hparams.generated_gestures_dir}", flush=True)
 
