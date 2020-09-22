@@ -68,7 +68,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             self.create_result_folder()
             # The datasets are loaded in this constructor because they contain 
             # necessary information for building the layers (namely the audio dimensionality)
-            self.load_train_and_val_datasets()
+            self.load_datasets()
             self.hparams.audio_dim = self.train_dataset.audio_dim
             self.calculate_mean_pose()
         
@@ -85,10 +85,11 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         """
         self.init_prediction_saving_params()
 
-    def load_train_and_val_datasets(self):
+    def load_datasets(self):
         try:
             self.train_dataset = SpeechGestureDataset(self.hparams.data_dir, self.hparams.use_pca, train=True)
             self.val_dataset   = SpeechGestureDataset(self.hparams.data_dir, self.hparams.use_pca, train=False)
+            self.val_sequence  = ValidationDataset(self.hparams.data_dir, self.hparams.past_context, self.hparams.future_context)
         except FileNotFoundError as err:
             abs_data_dir = os.path.abspath(self.hparams.data_dir)
             if not os.path.isdir(abs_data_dir):
@@ -244,12 +245,9 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
                 self.load_train_or_val_input(self.train_dataset[0])
                 
         # Load the first validation sequence as input
-        # NOTE: test_dataset contains predefined validation sequences,
-        #       so we don't touch the actual test data here!
-        # TODO: rename test_dataset...
         if "validation" in self.enabled_phases:
             self.val_input = \
-                self.load_train_or_val_input(self.test_dataset[5]) # TODO magic number (longest validation sequence)        
+                self.load_train_or_val_input(self.val_sequence[0])
        
                 
     def forward(self, audio, text, use_conditioning, motion, use_teacher_forcing=True):
@@ -522,7 +520,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
     
     def on_epoch_start(self):
         # Anneal teacher forcing schedule
-        if self.current_epoch < self.hparams.n_epochs_with_teacher_forcing:
+        if self.current_epoch < self.hparams.n_epochs_with_no_autoregression:
             self.teaching_freq = 16 # full teacher forcing
         else:
             self.teaching_freq = max(int(self.teaching_freq/2), 2)

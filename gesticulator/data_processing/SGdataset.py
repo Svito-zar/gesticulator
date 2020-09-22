@@ -70,14 +70,14 @@ class ValidationDataset(Dataset):
         self.past_context = past_context
         self.future_context = future_context
         # Get the data
-        self.audio = np.load(path.join(root_dir, 'dev_inputs', 'X_dev_NaturalTalking_01.npy')).astype(np.float32)
-        self.text = np.load(path.join(root_dir, 'dev_inputs', 'T_dev_NaturalTalking_01.npy')).astype(np.float32)
+        self.audio = np.load(path.join(root_dir, 'dev_inputs', 'X_dev_Recording_001.npy')).astype(np.float32)
+        self.text = np.load(path.join(root_dir, 'dev_inputs', 'T_dev_Recording_001.npy')).astype(np.float32)
         # upsample text to get the same sampling rate as the audio
         cols = np.linspace(0, self.text.shape[0], endpoint=False, num=self.text.shape[0]*2, dtype=int)
         self.text = self.text[cols,:]
 
-        self.start_times = [99.9, 140.6, 164.3, 257.7, 269.6, 278.9, 315.8, 372.5, 476.9 ]
-        self.end_times = [104.7, 149.5, 166, 259.6, 272.1, 288.2, 317.9, 377.3, 481.6 ]
+        self.start_times = [20]
+        self.end_times = [35]
 
         self.audio_dim = self[0]['audio'].shape[-1]
 
