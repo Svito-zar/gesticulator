@@ -436,9 +436,9 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         mse_loss_val = mse_loss.unsqueeze(0)
         vel_loss_val = vel_loss.unsqueeze(0)
 
-        tqdm_dict = {"train_loss": loss_val,
-                      "mse_loss_val": mse_loss_val,
-                      "cont_loss_val": vel_loss_val}
+        tqdm_dict = {"train/full_loss": loss_val,
+                      "train/mse_loss": mse_loss_val,
+                      "train/cont_loss": vel_loss_val}
 
         output = OrderedDict({
             'loss': loss,
@@ -524,4 +524,4 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             self.teaching_freq = 16 # full teacher forcing
         else:
             self.teaching_freq = max(int(self.teaching_freq/2), 2)
-        print("Current teacher forcing frequency is: ", self.teaching_freq)
+            print("Current teacher forcing frequency is: ", self.teaching_freq)
