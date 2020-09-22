@@ -32,7 +32,7 @@ learning_rate: 0.0001
 vel_coef: 0.6 
 dropout: 0.2
 dropout_multiplier: 4.0 # The dropout is multiplied by this factor in the conditioning layer
-n_epochs_with_teacher_forcing: 7
+n_epochs_with_no_autoregression: 7
 # ---- Parameters for saving model predictions ----
 save_val_predictions_every_n_epoch: 0 # Disabled by default
 save_train_predictions_every_n_epoch: 0 # Disabled by default

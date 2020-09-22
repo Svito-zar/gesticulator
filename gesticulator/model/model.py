@@ -418,7 +418,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         true_gesture = batch["output"]
 
         # first decide if we are going to condition
-        if self.current_epoch < self.hparams.n_epochs_with_teacher_forcing:
+        if self.current_epoch < self.hparams.n_epochs_with_no_autoregression:
            use_conditioning = False
         else:
            use_conditioning = True
@@ -526,4 +526,4 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             self.teaching_freq = 16 # full teacher forcing
         else:
             self.teaching_freq = max(int(self.teaching_freq/2), 2)
-        print("Current no-teacher frequency is: ", self.teaching_freq)
+        print("Current teacher forcing frequency is: ", self.teaching_freq)

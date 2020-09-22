@@ -97,7 +97,7 @@ def construct_model_config_parser(add_trainer_args = True):
     parser.add('--vel_coef',      '-vel_c', default=0.6,    type=float, help='Coefficient for the velocity loss')
     parser.add('--dropout',       '-drop',  default=0.2,    type=float, help='Dropout probability')
     parser.add('--dropout_multiplier', '-d_mult', default=4.0, type=float, help='The dropout is multiplied by this factor in the conditioning layer')
-    parser.add('--n_epochs_with_teacher_forcing', '-n_teacher', default=7, type=int, help='The number of epochs with full teacher forcing enabled')
+    parser.add('--n_epochs_with_no_autoregression', '-n_teacher', default=7, type=int, help='The number of epochs with full teacher forcing enabled')
     # Prediction saving parameters
     parser.add('--save_val_predictions_every_n_epoch', '-val_save_rate', default=0, type=int, 
                help='If n > 0, generate and save the predicted gestures on the first validation sequence '
