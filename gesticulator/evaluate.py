@@ -35,7 +35,7 @@ def add_test_script_arguments(parser):
 if __name__ == "__main__":
     """
     Usage: 
-        python test.py (--model_file MODEL_FILE | --run_name RUN_NAME ) [--use_semantic_input] [--use_random_input]
+        python evaluate.py (--model_file MODEL_FILE | --run_name RUN_NAME ) [--use_semantic_input] [--use_random_input]
     """
     # Model parameters are added here
     parser = construct_model_config_parser()

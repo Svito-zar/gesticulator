@@ -30,7 +30,7 @@ python demo.py --audio input/jeremy_howard.wav --text input/jeremy_howard.txt
 or
 
 ```bash
-python demo.py --audio inputs/jeremy_howard.wav --text "Deep learning is an algorithm inspired by how the human brain works, and as a result it's an algorithm which has no theoretical limitations on what it can do. The more data you give it and the more computation time you give it, the better it gets. The New York Times also showed in this article another extraordinary result of deep learning which I'm going to show you now. It shows that computers can listen and understand."
+python demo.py --audio input/jeremy_howard.wav --text "Deep learning is an algorithm inspired by how the human brain works, and as a result it's an algorithm which has no theoretical limitations on what it can do. The more data you give it and the more computation time you give it, the better it gets. The New York Times also showed in this article another extraordinary result of deep learning which I'm going to show you now. It shows that computers can listen and understand."
 ```
 
 ## Output example:

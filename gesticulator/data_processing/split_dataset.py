@@ -36,7 +36,7 @@ def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
 
     # Copy text
     filename = f"{audio_prefix}{ind}{suffix}.json"
-    transcript_file_path = path.join(raw_d_dir, "Transcript", filename)
+    transcript_file_path = path.join(raw_d_dir, "Transcripts", filename)
     
     if os.path.isfile(transcript_file_path):
         target_file_path = path.join(processed_d_dir, data_split, "inputs", filename)
@@ -128,7 +128,7 @@ def _files_to_pandas_dataframe(extracted_dir, set_name, idx_range):
 def check_dataset_directories(raw_data_dir):
     """
     Verify that 'raw_data_dir' exists and that it contains the 
-    'Audio', 'Transcript' and 'Motion' subdirectories.
+    'Audio', 'Transcripts' and 'Motion' subdirectories.
     """
     if not path.isdir(raw_data_dir):
         abs_path = path.abspath(raw_data_dir)
@@ -138,7 +138,7 @@ def check_dataset_directories(raw_data_dir):
         exit(-1)
 
     speech_dir     = path.join(raw_data_dir, "Audio")
-    transcript_dir = path.join(raw_data_dir, "Transcript")
+    transcript_dir = path.join(raw_data_dir, "Transcripts")
     motion_dir     = path.join(raw_data_dir, "Motion")
 
     for sub_dir in [speech_dir, transcript_dir, motion_dir]:

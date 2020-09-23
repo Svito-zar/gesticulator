@@ -32,7 +32,7 @@ This repository contains PyTorch based implementation of the framework for seman
   ```
 
 ### Demonstration
-Head over to the `demo` folder for a quick demonstration if you're not interested in training the model yourself.
+Head over to the [demo](https://github.com/Svito-zar/gesticulator/tree/master/demo) folder for a quick demonstration if you're not interested in training the model yourself.
 
 ### Documentation
 For all the scripts which we refer to in this repo description there are several command line arguments which you can see by calling them with the `--help` argument.
@@ -51,7 +51,7 @@ ___
 ### 1. Obtain the data
 - Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
 - Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
-- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcript`.
+- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcripts`.
 
 ### 2. Pre-process the data
 ```
