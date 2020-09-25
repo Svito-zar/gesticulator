@@ -94,7 +94,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
             abs_data_dir = os.path.abspath(self.hparams.data_dir)
             if not os.path.isdir(abs_data_dir):
                 print(f"ERROR: The given dataset directory {abs_data_dir} does not exist!")
-                print("Please, set the correct path with the --data_dir option!")
+                print("Please, set the correct path with the --data option!")
             else:
                 print("ERROR: Missing data in the dataset!")
             exit(-1)
@@ -181,7 +181,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
 
         self.conditioning_1 = nn.Sequential(nn.Linear(self.output_dim * args.n_prev_poses,
                                                 args.first_l_sz * 2), self.activation,
-                                            nn.Dropout(args.dropout * 4))
+                                            nn.Dropout(args.dropout * args.dropout_multiplier))
 
     def init_layers(self):
         # Use He initialization for most layers

@@ -76,8 +76,8 @@ class ValidationDataset(Dataset):
         cols = np.linspace(0, self.text.shape[0], endpoint=False, num=self.text.shape[0]*2, dtype=int)
         self.text = self.text[cols,:]
 
-        self.start_times = [20]
-        self.end_times = [35]
+        self.start_times = [120]
+        self.end_times = [135]
 
         self.audio_dim = self[0]['audio'].shape[-1]
 
