@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
+import random
 
 from sklearn.decomposition import PCA
 
@@ -76,8 +77,10 @@ class ValidationDataset(Dataset):
         cols = np.linspace(0, self.text.shape[0], endpoint=False, num=self.text.shape[0]*2, dtype=int)
         self.text = self.text[cols,:]
 
-        self.start_times = [120]
-        self.end_times = [135]
+        # evaluate on random times
+        start_time = random.randint(50, 500)
+        self.start_times = [start_time]
+        self.end_times = [start_time + 15]
 
         self.audio_dim = self[0]['audio'].shape[-1]
 
