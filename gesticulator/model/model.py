@@ -26,6 +26,7 @@ from gesticulator.data_processing.SGdataset import SpeechGestureDataset, Validat
 
 warnings.filterwarnings("ignore")
 torch.set_default_tensor_type('torch.FloatTensor')
+torch.autograd.set_detect_anomaly(True)
 
 def weights_init_he(m):
     """Initialize the given linear layer using He initialization."""
@@ -387,16 +388,16 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
         """
 
         # calculate corresponding speed
-        pred_speed = y_hat[1:] - y_hat[:-1]
-        actual_speed = y[1:] - y[:-1]
+        pred_speed = y_hat[:,1:] - y_hat[:,:-1]
+        actual_speed = y[:,1:] - y[:,:-1]
         vel_loss = self.loss(pred_speed, actual_speed)
 
         return [self.loss(y_hat, y), vel_loss * self.hparams.vel_coef]
 
     def val_loss(self, y_hat, y):
         # calculate corresponding speed
-        pred_speed = y_hat[1:] - y_hat[:-1]
-        actual_speed = y[1:] - y[:-1]
+        pred_speed = y_hat[:,1:] - y_hat[:,:-1]
+        actual_speed = y[:,1:] - y[:,:-1]
 
         return self.loss(pred_speed, actual_speed)
 
