@@ -325,8 +325,7 @@ class GesticulatorModel(pl.LightningModule, PredictionSavingMixin):
                 else:
                     final_h = self.third_layer(second_h)
             
-            # This assumes that hidden_to_output has tanh activation function
-            curr_pose = self.hidden_to_output(final_h) * math.pi #because it is from -pi to pi
+            curr_pose = self.hidden_to_output(final_h)
 
             if motion is not None and use_teacher_forcing and time_st % self.teaching_freq < 2:
                 # teacher forcing
