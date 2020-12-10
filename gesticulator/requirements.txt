@@ -1,6 +1,5 @@
 absl-py==0.9.0
 audioread==2.1.8
-bert-embedding==1.0.1
 bvh==0.3
 cachetools==4.0.0
 certifi==2019.11.28
@@ -24,9 +23,7 @@ librosa==0.7.2
 llvmlite==0.31.0
 Markdown==3.2.1
 matplotlib==3.2.1
-mxnet==1.4.0
 numba==0.48.0
-numpy==1.18.2
 oauthlib==3.1.0
 pandas==1.0.3
 praat-parselmouth==0.3.3
