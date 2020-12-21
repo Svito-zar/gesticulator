@@ -46,7 +46,7 @@ class SpeechGestureDataset(Dataset):
         self.audio_dim = self[0]['audio'].shape[-1]
 
     def __len__(self):
-        return len(self.audio)
+        return len(self.gesture)
 
 
     def __getitem__(self, idx):
@@ -71,14 +71,14 @@ class ValidationDataset(Dataset):
         self.past_context = past_context
         self.future_context = future_context
         # Get the data
-        self.audio = np.load(path.join(root_dir, 'dev_inputs', 'X_dev_Recording_001.npy')).astype(np.float32)
-        self.text = np.load(path.join(root_dir, 'dev_inputs', 'T_dev_Recording_001.npy')).astype(np.float32)
+        self.audio = np.load(path.join(root_dir, 'dev_inputs', 'X_dev_NaturalTalking_001.npy')).astype(np.float32)
+        self.text = np.load(path.join(root_dir, 'dev_inputs', 'T_dev_NaturalTalking_001.npy')).astype(np.float32)
         # upsample text to get the same sampling rate as the audio
         cols = np.linspace(0, self.text.shape[0], endpoint=False, num=self.text.shape[0]*2, dtype=int)
         self.text = self.text[cols,:]
 
         # evaluate on random times
-        start_time = random.randint(50, 500)
+        start_time = random.randint(30, 100)
         self.start_times = [start_time]
         self.end_times = [start_time + 15]
 

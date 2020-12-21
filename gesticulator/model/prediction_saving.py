@@ -5,6 +5,7 @@ from abc import ABC
 
 import torch
 import numpy as np
+from joblib import load
 
 from gesticulator.visualization.motion_visualizer.generate_videos import visualize
 
@@ -110,7 +111,7 @@ class PredictionSavingMixin(ABC):
                 '04': [ 5.5, 20.8, 45.6, 66, 86.3, 106.5, 120.4, 163.7,
                         180.8, 242.3, 283.5, 300.8, 330.8, 349.6, 377 ],
                 '05': [ 30, 42, 102, 140, 179, 205, 234, 253, 329, 345,
-                        384, 402, 419, 437] } # , 450 ] }
+                        384, 402, 419, 437, 450 ] }
         else:
             print(f"Unknown test prediction mode '{mode}'! Possible values: 'seman' or 'rand'.")
             exit(-1)
@@ -176,9 +177,9 @@ class PredictionSavingMixin(ABC):
     def load_test_file(self, file_type, num):
         """Load the tensor that will be used for generating semantic test predictions."""
         if file_type == 'audio':
-            filename = f"X_test_NaturalTalking_{num}.npy"
+            filename = f"X_test_NaturalTalking_0{num}.npy"
         elif file_type == 'text':
-            filename = f"T_test_NaturalTalking_{num}.npy"
+            filename = f"T_test_NaturalTalking_0{num}.npy"
         else:
             print("ERROR: unknown semantic test input type:", file_type)
             exit(-1)
