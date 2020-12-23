@@ -53,7 +53,18 @@ ___
 - Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
 - Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcripts`.
 
-### 2. Pre-process the data
+### 2.1 Rename and move files
+```
+cd gesticulator/dataset
+
+# rename files from the GENEA Challenge names to the Trinity Speech-Gesture dataset naming
+python rename_data_files.py
+
+# Go back to the gesticulator/gesticulator directory
+cd ..
+```
+
+### 2.2 Pre-process the data
 ```
 cd gesticulator/data_processing
 
@@ -70,7 +81,7 @@ python process_dataset.py
 cd ..
 ```
 
-By default, the model expects the dataset in the `dataset/raw` folder, and the processed dataset will be available in the `dataset/processed folder`. If your dataset is elsewhere, please provide the correct paths with the `--raw_data_dir` and `--proc_data_dir` command line arguments.
+By default, the model expects the dataset in the `dataset/raw_data` folder, and the processed dataset will be available in the `dataset/processed_data folder`. If your dataset is elsewhere, please provide the correct paths with the `--raw_data_dir` and `--proc_data_dir` command line arguments.
 
 ### 3. Learn speech- and text-driven gesture generation model
 In order to train the model, run

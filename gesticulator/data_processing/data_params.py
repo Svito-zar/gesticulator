@@ -12,9 +12,9 @@ dataset_argparser = argparse.ArgumentParser(
     description="Paths to the Trinity Speech-Gesture dataset and the processed output folder."
 )
 
-dataset_argparser.add_argument('--raw_data_dir', '-data_raw', default="../../dataset/raw/",
+dataset_argparser.add_argument('--raw_data_dir', '-data_raw', default="../../dataset/raw_data/",
                 help='Path to the folder with the raw dataset')
-dataset_argparser.add_argument('--proc_data_dir', '-data_proc', default="../../dataset/processed/",
+dataset_argparser.add_argument('--proc_data_dir', '-data_proc', default="../../dataset/processed_data/",
                 help='Path to the folder with the processed dataset')
 
 # -------------------------------------------------------------------------------------------------
