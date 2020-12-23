@@ -51,11 +51,10 @@ ___
 ### 1. Obtain the data
 - Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
 - Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
-- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcripts`.
 
 ### 2.1 Rename and move files
 ```
-cd gesticulator/dataset
+cd dataset
 
 # rename files from the GENEA Challenge names to the Trinity Speech-Gesture dataset naming
 python rename_data_files.py
@@ -70,6 +69,7 @@ cd gesticulator/data_processing
 
 # encode motion from BVH files into exponensial map representation
 python bvh2features.py
+# ( this will take a while)
 
 # Split the dataset into training and validation
 python split_dataset.py
@@ -111,6 +111,8 @@ python evaluate.py --use_semantic_input --use_random_input
 If you set the `run_name` argument during training, then please provide the path to the saved model checkpoint by using the `--model_file` option.
 
 The generated motion is stored in the `results/<run_name>/generated_gestures` folder 1) in the exponential map format 2) as `.mp4` videos and 3) as 3D coordinates (which can be used for objective evaluation).
+
+For nice visualization you can use the following repository: https://github.com/jonepatr/genea_visualizer
 
 ### Quantitative evaluation
 

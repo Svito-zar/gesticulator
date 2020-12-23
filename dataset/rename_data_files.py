@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 if __name__ == '__main__':
     #  Setup parameter parser
-    parser = ArgumentParser(add_help=False)
+    parser = ArgumentParser()
     parser.add_argument('--folder_downloaded', '-f_down', required=True,
                                    help="Path where the downloaded GENEA dataset is stored. Should end with `GENEA_Challenge_2020_data_release`.")
     parser.add_argument('--folder_renamed', '-f_renamed',  default="./raw_data/",
@@ -93,4 +93,4 @@ if __name__ == '__main__':
 
              os.rename(os.path.join(audio_genea_folder, genea_file_name), os.path.join(audio_original_folder, original_file_name))
 
-    print("Done!")
+    print("Done! The dataset with proper naming is stored at " + folder_processed)

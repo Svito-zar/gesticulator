@@ -66,7 +66,7 @@ def extract_joint_angles(bvh_dir, files, dest_dir, pipeline_dir, fps):
 if __name__ == '__main__':
 
     # Setup parameter parser
-    parser = ArgumentParser(add_help=False)
+    parser = ArgumentParser()
     parser.add_argument('--bvh_dir', '-orig', required=True,
                                    help="Path where original motion files (in BVH format) are stored")
     parser.add_argument('--dest_dir', '-dest', required=True,

@@ -2,7 +2,7 @@
 # The values here are the same as the defaults in the code
 
 # ---- Data directories ----
-data_dir:   '../dataset/processed'
+data_dir:   '../dataset/processed_data'
 result_dir: '../results'
 run_name:   'last_run'
 # generated_prediction_dir: # defaults to <result_dir>/<run_name>/generated_gestures/
