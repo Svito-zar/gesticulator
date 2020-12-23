@@ -7,7 +7,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(add_help=False)
     parser.add_argument('--folder_downloaded', '-f_down', required=True,
                                    help="Path where the downloaded GENEA dataset is stored. Should end with `GENEA_Challenge_2020_data_release`.")
-    parser.add_argument('--folder_renamed', '-f_renamed',  default="./",
+    parser.add_argument('--folder_renamed', '-f_renamed',  default="./raw_data/",
                                    help="Path where renamed dataset will be stored")
 
     params = parser.parse_args()
