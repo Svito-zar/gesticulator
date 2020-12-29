@@ -7,6 +7,8 @@ from pytorch_lightning import Trainer
 def main(test_params):
     model = GesticulatorModel.load_from_checkpoint(
         test_params.model_file, inference_mode=True)
+
+    model.eval()
     
     create_save_dirs(model)
 

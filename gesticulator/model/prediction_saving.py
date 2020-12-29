@@ -224,7 +224,7 @@ class PredictionSavingMixin(ABC):
             mp4_file = get_save_path("video"),
             npy_file = get_save_path("3d_coordinates"),
             start_t = 0, 
-            end_t = self.data_fps * self.hparams.saved_prediction_duration_sec,
+            end_t = self.hparams.saved_prediction_duration_sec,
             data_pipe_dir = data_pipe)
 
         # Clean up the temporary files
