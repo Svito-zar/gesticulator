@@ -145,4 +145,6 @@ series = {IVA '18}
 
 
 ## Contact
-If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
+If you have any questions - please use the [Discussion](https://github.com/Svito-zar/gesticulator/discussions) tab.
+
+If you encounter any problems/bugs/issues please create an issue on Github.
