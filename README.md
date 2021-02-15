@@ -51,14 +51,25 @@ ___
 ### 1. Obtain the data
 - Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
 - Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
-- Place the dataset in the `dataset` folder next to `gesticulator` folder in three subfolders: `Audio`, `Motion` and `Transcripts`.
 
-### 2. Pre-process the data
+### 2.1 Rename and move files
+```
+cd dataset
+
+# rename files from the GENEA Challenge names to the Trinity Speech-Gesture dataset naming
+python rename_data_files.py
+
+# Go back to the gesticulator/gesticulator directory
+cd ..
+```
+
+### 2.2 Pre-process the data
 ```
 cd gesticulator/data_processing
 
 # encode motion from BVH files into exponensial map representation
 python bvh2features.py
+# ( this will take a while)
 
 # Split the dataset into training and validation
 python split_dataset.py
@@ -70,7 +81,7 @@ python process_dataset.py
 cd ..
 ```
 
-By default, the model expects the dataset in the `dataset/raw` folder, and the processed dataset will be available in the `dataset/processed folder`. If your dataset is elsewhere, please provide the correct paths with the `--raw_data_dir` and `--proc_data_dir` command line arguments.
+By default, the model expects the dataset in the `dataset/raw_data` folder, and the processed dataset will be available in the `dataset/processed_data folder`. If your dataset is elsewhere, please provide the correct paths with the `--raw_data_dir` and `--proc_data_dir` command line arguments.
 
 ### 3. Learn speech- and text-driven gesture generation model
 In order to train the model, run
@@ -100,6 +111,8 @@ python evaluate.py --use_semantic_input --use_random_input
 If you set the `run_name` argument during training, then please provide the path to the saved model checkpoint by using the `--model_file` option.
 
 The generated motion is stored in the `results/<run_name>/generated_gestures` folder 1) in the exponential map format 2) as `.mp4` videos and 3) as 3D coordinates (which can be used for objective evaluation).
+
+For nice visualization you can use the following repository: https://github.com/jonepatr/genea_visualizer
 
 ### Quantitative evaluation
 
@@ -132,4 +145,6 @@ series = {IVA '18}
 
 
 ## Contact
-If you encounter any problems/bugs/issues please contact me on Github or by emailing me at tarask@kth.se for any bug reports/questions/suggestions. I prefer questions and bug reports on Github as that provides visibility to others who might be encountering same issues or who have the same questions.
+If you have any questions - please use the [Discussion](https://github.com/Svito-zar/gesticulator/discussions) tab.
+
+If you encounter any problems/bugs/issues please create an issue on Github.

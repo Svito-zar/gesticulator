@@ -15,16 +15,17 @@ from gesticulator.data_processing.data_params import dataset_argparser
 
 # Indices for train/dev/test split
 DEV_LAST_ID = 3
-TEST_LAST_ID = 4
-TRAIN_LAST_ID = 24
+TEST_LAST_ID = 6
+TRAIN_LAST_ID = 31
 
-audio_prefix = "Recording_"
-motion_prefix = "Recording_"
+audio_prefix = "NaturalTalking_"
+motion_prefix = "NaturalTalking_"
 
 def copy_files(ind, raw_d_dir, processed_d_dir, data_split, suffix=""):
 
     # add leading zeros
-    ind = str(ind).zfill(3)
+    if suffix == "":
+        ind = str(ind).zfill(3)
 
     # Copy audio
     filename = f"{audio_prefix}{ind}{suffix}.wav"
