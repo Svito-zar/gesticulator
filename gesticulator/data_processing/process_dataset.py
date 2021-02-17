@@ -12,7 +12,7 @@ import tqdm
 import pandas as pd
 import numpy as np
 
-from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert
+from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert, encode_json_transcript_with_bert_DEPRECATED
 from gesticulator.data_processing import tools
 # Params
 from gesticulator.data_processing.data_params import processing_argparser
@@ -101,8 +101,8 @@ def _encode_vectors(audio_filename, gesture_filename, text_filename, embedding_m
         print("[WARNING] Using deprecated BERT model!")
         text_encoding = encode_json_transcript_with_bert_DEPRECATED(text_filename, embedding_model)
     elif isinstance(embedding_model, tuple):
-        tokenizer, bert_model = embedding_model
-        text_encoding = encode_json_transcript_with_bert(text_filename, tokenizer, bert_model)
+        text_encoding = encode_json_transcript_with_bert(
+            text_filename, tokernizer = embedding_model[0], bert_model = embedding_model[1])
     else:
         raise Exception('Something is wrong with the BERT embedding model')
 
@@ -225,6 +225,7 @@ def _save_dataset(data_csv, save_dir, embedding_model, dataset_name, args):
             Y = np.concatenate((Y, output_vectors), axis=0)
             T = np.concatenate((T, text_vectors),   axis=0)
 
+    
     x_save_path = path.join(save_dir, f"X_{dataset_name}.npy")
     t_save_path = path.join(save_dir, f"T_{dataset_name}.npy")
     y_save_path = path.join(save_dir, f"Y_{dataset_name}.npy")

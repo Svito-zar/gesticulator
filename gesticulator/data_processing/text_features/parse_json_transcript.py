@@ -133,6 +133,7 @@ def encode_json_transcript_with_bert(json_file, tokenizer, bert_model):
 
                 # Add the sentence to the final feature list
                 feature_array.extend(sentence_features)
+
                 # Reset the sentence-level variables
                 non_filler_words_in_sentence = []
                 sentence_word_indices_list = []
@@ -178,8 +179,8 @@ def get_bert_embedding(sentence, tokenizer, bert_model):
     # The first element of the output tuple contains the word embeddings
     encoded_words = bert_model(tokenized_sentence)[0]
     
-    # Remove batch dimension
-    encoded_words = encoded_words.squeeze(axis=0)
+    # Remove batch dimension and convert to numpy array
+    encoded_words = encoded_words.squeeze(axis=0).detach().numpy()
     
     # The first and last vectors of the output correspond
     # to special tokens -> remove them
