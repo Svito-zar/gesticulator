@@ -55,7 +55,7 @@ ___
   cd dataset
   mkdir genea_data && cd genea_data
   
-  #Change USERNAME to the actual username you received for the dataset
+  # Change USERNAME to the actual username you received for the dataset
   wget --user USERNAME --ask-password -r -np -nH --cut-dirs=2 -R index.html* https://trinityspeechgesture.scss.tcd.ie/data/GENEA_Challenge_2020_data_release/ 
   ```
 
