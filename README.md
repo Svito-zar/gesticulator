@@ -50,12 +50,17 @@ ___
 ## Training the model
 ### 1. Obtain the data
 - Sign the license for the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/)
-- Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) 
+- Obtain training data from the `GENEA_Challenge_2020_data_release` folder of the [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/), using the acquired credentials:
+  ```
+  cd dataset
+  mkdir genea_data && cd genea_data
+  
+  #Change USERNAME to the actual username you received for the dataset
+  wget --user USERNAME --ask-password -r -np -nH --cut-dirs=2 -R index.html* https://trinityspeechgesture.scss.tcd.ie/data/GENEA_Challenge_2020_data_release/ 
+  ```
 
 ### 2.1 Rename and move files
 ```
-cd dataset
-
 # rename files from the GENEA Challenge names to the Trinity Speech-Gesture dataset naming
 python rename_data_files.py
 
