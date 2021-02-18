@@ -102,7 +102,7 @@ def _encode_vectors(audio_filename, gesture_filename, text_filename, embedding_m
         text_encoding = encode_json_transcript_with_bert_DEPRECATED(text_filename, embedding_model)
     elif isinstance(embedding_model, tuple):
         text_encoding = encode_json_transcript_with_bert(
-            text_filename, tokernizer = embedding_model[0], bert_model = embedding_model[1])
+            text_filename, tokenizer = embedding_model[0], bert_model = embedding_model[1])
     else:
         raise Exception('Something is wrong with the BERT embedding model')
 
