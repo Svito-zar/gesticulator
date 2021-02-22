@@ -17,7 +17,6 @@ from gesticulator.data_processing import tools
 # Params
 from gesticulator.data_processing.data_params import processing_argparser
 
-from bert_embedding import BertEmbedding
 from transformers import BertTokenizer, BertModel
 
 
@@ -97,10 +96,7 @@ def _encode_vectors(audio_filename, gesture_filename, text_filename, embedding_m
     output_vectors = output_vectors[0::3]
 
     # Step 3: Obtain text transcription:
-    if isinstance(embedding_model, BertEmbedding):
-        print("[WARNING] Using deprecated BERT model!")
-        text_encoding = encode_json_transcript_with_bert_DEPRECATED(text_filename, embedding_model)
-    elif isinstance(embedding_model, tuple):
+    if isinstance(embedding_model, tuple):
         text_encoding = encode_json_transcript_with_bert(
             text_filename, tokenizer = embedding_model[0], bert_model = embedding_model[1])
     else:
