@@ -7,9 +7,9 @@ import inflect
 import numpy as np
 import torch
 
-from bert_embedding import BertEmbedding
+from transformers import BertTokenizer, BertModel
 
-from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert
+from gesticulator.data_processing.text_features.parse_json_transcript import encode_json_transcript_with_bert, get_bert_embedding
 from gesticulator.data_processing import tools
 from gesticulator.model.model import GesticulatorModel
 from motion_visualizer.convert2bvh import write_bvh
@@ -74,9 +74,10 @@ class GesturePredictor:
 
     def _create_embedding(self, text_dim):
         if text_dim == 773:
-            print("Using BERT embedding.")
-            return BertEmbedding(max_seq_length=100, model='bert_12_768_12', 
-                                           dataset_name='book_corpus_wiki_en_cased')
+            tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
+            bert_model = BertModel.from_pretrained('bert-base-cased')
+
+            return tokenizer, bert_model
         elif text_dim == 305:
             print("Using FastText embedding.")
             return FastText()
@@ -134,7 +135,7 @@ class GesturePredictor:
         return audio
 
     def _pad_text_features(self, text):
-        if isinstance(self.embedding, BertEmbedding):
+        if isinstance(self.embedding, tuple):
             text_dim = 768
         elif isinstance(self.embedding, FastText):
             text_dim = 300
@@ -203,8 +204,9 @@ class GesturePredictor:
             text_type:  the TextInputType of the text (as above)
         """
         if text_type == self.TextInputType.JSON_PATH:
-            if isinstance(self.embedding, BertEmbedding):
-                return encode_json_transcript_with_bert(text, self.embedding)
+            if isinstance(self.embedding, tuple):
+                return encode_json_transcript_with_bert(
+                    text, tokenizer = self.embedding[0], bert_model = self.embedding[1])
             else:
                 raise Exception('ERROR: Unknown embedding: ', self.embedding)
         
@@ -214,15 +216,14 @@ class GesturePredictor:
                 text = file.read()
 
         # At this point 'text' contains the input transcription as a string
-        if isinstance(self.embedding, BertEmbedding):
-            return self._estimate_word_timings_bert(text, audio_len_frames)
+        if isinstance(self.embedding, tuple):
+            return self._estimate_word_timings_bert(
+                text, audio_len_frames, tokenizer = self.embedding[0], bert_model = self.embedding[1])
         else:
             print('ERROR: Unknown embedding: ', self.embedding)
             exit(-1)
                 
-        return text_features
-
-    def _estimate_word_timings_bert(self, text, total_duration_frames):
+    def _estimate_word_timings_bert(self, text, total_duration_frames, tokenizer, bert_model):
         """
         This is a convenience functions that enables the model to work with plaintext 
         transcriptions in place of a time-annotated JSON file from Google Speech-to-Text.
@@ -279,7 +280,7 @@ class GesturePredictor:
                 word_n_syllables_in_sentences[-1].append(curr_n_syllables)
         
         fillers = ["eh", "ah", "like", "kind of"]
-        filler_encoding = self.embedding(["eh, ah, like, kind of"])[0][1][0]
+        filler_encoding = get_bert_embedding(fillers, tokenizer, bert_model)[0]
         elapsed_deciseconds = 0
         output_features = []
         
@@ -301,16 +302,14 @@ class GesturePredictor:
             
             # 3) After the sentence is over, feed it whole into BERT (without fillers)
             # Concatenate the words using space as a separator
-            original_input = [' '.join(sentence_without_fillers)]
-            input_to_bert, encoded_words_in_sentence = self.embedding(original_input)[0]
+            encoded_words_in_sentence = get_bert_embedding(sentence_without_fillers, tokenizer, bert_model)
             
-            if input_to_bert[-1] not in delimiters:
-                print("ERROR: missing delimiter in input to BERT!")
-                print("\nNOTE: Please make sure that the input text ends with a punctuation mark (. ? or !)")
-                print("The current sentence:", original_input)
-                print("The input to BERT:", input_to_bert)
-                exit(-1)
-            
+            if len(sentence_without_fillers) != len(encoded_words_in_sentence):
+                print("ERROR: words got misaligned during BERT tokenization")
+                print("       (expected {} words, but got {} instead.)".format(
+                len(sentence_without_fillers), len(encoded_words_in_sentence)))
+                exit(-1) 
+        
             if len(sentence_words) != len(word_n_syllables_in_sentences[sentence_idx]):
                 print(f"""Error, sentence words has different length than numbers of syllables:
                     Number of words: {len(sentence_words)} | number of syllables: {len(word_n_syllables_in_sentences[sentence_idx])}
@@ -322,11 +321,18 @@ class GesturePredictor:
             # 4) Go through the sentence again, this time with filler words
             #    and append: - the embedded words from BERT
             #                - the 5 extra features that we estimate using the syllable count
-            sentence_syllables = word_n_syllables_in_sentences[sentence_idx]
-            for curr_word, curr_encoding, curr_n_syllables in zip(sentence_words, encoded_words_in_sentence, sentence_syllables):
+            sentence_n_syllables = word_n_syllables_in_sentences[sentence_idx]
+            
+            encoded_words = iter(encoded_words_in_sentence)
+            for curr_word, curr_n_syllables in zip(sentence_words, sentence_n_syllables):
                 
                 if curr_n_syllables == 0:
                     raise Exception(f"Error, word '{curr_word}' has 0 syllables!")
+               
+                if curr_word in fillers or curr_word[:-1] in fillers:
+                    curr_encoding = filler_encoding
+                else:
+                    curr_encoding = next(encoded_words)
 
                 # We take the ceiling to not lose information
                 # (if the text was shorter than the audio because of rounding errors, then
@@ -350,7 +356,6 @@ class GesturePredictor:
                                        w_speed ]
 
                     output_features.append(list(curr_encoding) + frame_features)
-    
         return np.array(output_features)
 
 
