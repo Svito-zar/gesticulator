@@ -238,9 +238,6 @@ def create_embedding(name):
         bert_model = BertModel.from_pretrained('bert-base-cased')
 
         return tokenizer, bert_model
-    if name == "BERT_deprecated":
-        return BertEmbedding(max_seq_length=100, model='bert_12_768_12', # COMMENT: will we ever change max_seq_length?
-                             dataset_name='book_corpus_wiki_en_cased')
     elif name == "FastText":
         return FastText()
     else:
