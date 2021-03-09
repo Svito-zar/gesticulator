@@ -135,7 +135,7 @@ If you use this code in your research please cite it:
 }
 ```
 
-For using the dataset I have used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) using the following bib file:
+For using the dataset used in this work, please don't forget to cite [Trinity Speech-Gesture dataset](https://trinityspeechgesture.scss.tcd.ie/) and GENEA Gesture Generation Challenge using the following bib files:
 ```
 @inproceedings{ferstl2018investigating,
 author = {Ferstl, Ylva and McDonnell, Rachel},
@@ -145,6 +145,14 @@ publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 booktitle = {Proceedings of the 18th International Conference on Intelligent Virtual Agents},
 series = {IVA '18}
+}
+
+@inproceedings{kucherenko2021large,
+  author={Kucherenko, Taras and Jonell, Patrik and Yoon, Youngwoo and Wolfert, Pieter and Henter, Gustav Eje},
+  title={A large, crowdsourced evaluation of gesture generation systems on common data: The GENEA Challenge 2020},
+  note = {Accepted for publication.},
+  booktitle={{Proceedings of the International Conference on Intelligent User Interfaces}},
+  year={2021}
 }
 ```
 
