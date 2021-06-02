@@ -70,6 +70,6 @@ transformers==4.3.2
 transforms3d==0.3.1
 typing==3.6.6
 typing-extensions==3.7.4.3
-urllib3==1.25.8
+urllib3==1.26.5
 Werkzeug==1.0.1
 zipp==3.4.0
