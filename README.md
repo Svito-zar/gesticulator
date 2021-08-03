@@ -56,7 +56,7 @@ ___
   mkdir genea_data && cd genea_data
   
   # Change USERNAME to the actual username you received for the dataset
-  wget --user USERNAME --ask-password -r -np -nH --cut-dirs=2 -R index.html* https://trinityspeechgesture.scss.tcd.ie/data/GENEA_Challenge_2020_data_release/ 
+  wget --user USERNAME --ask-password -r -np -nH --cut-dirs=2 -R index.html* https://trinityspeechgesture.scss.tcd.ie/data/Trinity%20Speech-Gesture%20I/GENEA_Challenge_2020_data_release/ 
   ```
 
 ### 2.1 Rename and move files
@@ -150,7 +150,6 @@ series = {IVA '18}
 @inproceedings{kucherenko2021large,
   author={Kucherenko, Taras and Jonell, Patrik and Yoon, Youngwoo and Wolfert, Pieter and Henter, Gustav Eje},
   title={A large, crowdsourced evaluation of gesture generation systems on common data: The GENEA Challenge 2020},
-  note = {Accepted for publication.},
   booktitle={{Proceedings of the International Conference on Intelligent User Interfaces}},
   year={2021}
 }
